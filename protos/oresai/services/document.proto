@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package oresai.services.document;
+
+import "oresai/objects/objects.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+// ドキュメント管理サービス
+service DocumentService {
+  // ドキュメントを作成 (Create)
+  rpc CreateDocument(CreateDocumentRequest) returns (Document);
+  // 特定のドキュメントを取得 (Read)
+  rpc GetDocument(GetDocumentRequest) returns (Document);
+  // 組織内のドキュメントを一覧取得 (Read)
+  rpc ListDocuments(ListDocumentsRequest) returns (ListDocumentsResponse);
+  // ドキュメントを更新 (Update)
+  rpc UpdateDocument(UpdateDocumentRequest) returns (Document);
+  // ドキュメントを削除 (Delete)
+  rpc DeleteDocument(DeleteDocumentRequest) returns (google.protobuf.Empty);
+  // ドキュメントを検索 (Search)
+  rpc SearchDocuments(SearchDocumentsRequest) returns (ListDocumentsResponse);
+}

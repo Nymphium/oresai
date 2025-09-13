@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package oresai.objects;
+
+import "google/protobuf/timestamp.proto";
+
+// 組織
+message Organization {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+
+// ドキュメント
+message Document {
+  string id = 1;
+  string organization_id = 2; // **どの組織に属するかを示すID**
+  string author_id = 3; // 作成者のユーザーID
+  string title = 4;
+  string content = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+// --- OrganizationService Messages ---
+
+message CreateOrganizationRequest {
+  string name = 1;
+}
+
+message ListOrganizationsRequest {}
+
+message ListOrganizationsResponse {
+  repeated Organization organizations = 1;
+}
+
+// --- DocumentService Messages ---
+// **すべてのリクエストに organization_id が含まれるのがポイント**
+
+message CreateDocumentRequest {
+  string organization_id = 1;
+  string title = 2;
+  string content = 3;
+}
+
+message GetDocumentRequest {
+  string organization_id = 1;
+  string id = 2;
+}
+
+message ListDocumentsRequest {
+  string organization_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListDocumentsResponse {
+  repeated Document documents = 1;
+  string next_page_token = 2;
+}
+
+message UpdateDocumentRequest {
+  string organization_id = 1;
+  string id = 2;
+  optional string title = 3;
+  optional string content = 4;
+}
+
+message DeleteDocumentRequest {
+  string organization_id = 1;
+  string id = 2;
+}
+
+message SearchDocumentsRequest {
+  string organization_id = 1;
+  string query = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
