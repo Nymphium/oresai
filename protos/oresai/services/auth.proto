@@ -1,24 +1,26 @@
 syntax = "proto3";
 
-package oresai.services.auth;
+package oresai.services;
 
-import "oresai/objects/objects.proto";
-
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/empty.proto";
-
-// (AuthServiceの定義は前回とほぼ同じ)
 service AuthService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
 }
 
-// 組織管理サービス
-service OrganizationService {
-  // 組織を作成
-  rpc CreateOrganization(CreateOrganizationRequest) returns (Organization);
-  // 自分が所属する組織の一覧を取得
-  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse);
-  // (発展) 組織にメンバーを招待する
-  // rpc InviteMember(InviteMemberRequest) returns (google.protobuf.Empty);
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1; // JWTなどの認証トークン
 }

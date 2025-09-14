@@ -1,0 +1,13 @@
+version: v2
+
+clean: true
+
+managed:
+  enabled: true
+
+plugins:
+- local: [protoc-gen-ocaml]
+  opt: prefix_output_with_package=true;annot=[@@deriving show { with_path = false}, eq]
+  out: generated
+  include_imports: true
+  include_wkt: true

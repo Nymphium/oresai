@@ -7,7 +7,11 @@ homepage: "https://github.com/your-id/repo"
 bug-reports: "https://github.com/your-id/repo/issues"
 dev-repo: "git+https://github.com/your-ide/repo.git"
 depends: [
-  "dune" {>= "3.0.0"}
-  "lwt"
+  "dune" {>= "3.20.0"}
+  "core"
+  "grpc-eio"
+  "h2-eio"
+  "eio_main"
+  "ocaml-protoc-plugin"
   "alcotest" { with-test }
 ]

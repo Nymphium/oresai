@@ -4,6 +4,21 @@ package oresai.objects;
 
 import "google/protobuf/timestamp.proto";
 
+message User {
+  string id = 1; // UUID
+  string name = 2;
+  string email = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message UserProfile {
+  string user_id = 1;
+  string nickname = 2;
+  string profile = 3;
+  repeated string links = 4; // SNSなどのリンク
+  google.protobuf.Timestamp birthdate = 5; // ignore time
+}
+
 // 組織
 message Organization {
   string id = 1;
@@ -14,66 +29,10 @@ message Organization {
 // ドキュメント
 message Document {
   string id = 1;
-  string organization_id = 2; // **どの組織に属するかを示すID**
+  string organization_id = 2;
   string author_id = 3; // 作成者のユーザーID
   string title = 4;
   string content = 5;
   google.protobuf.Timestamp created_at = 6;
   google.protobuf.Timestamp updated_at = 7;
-}
-
-// --- OrganizationService Messages ---
-
-message CreateOrganizationRequest {
-  string name = 1;
-}
-
-message ListOrganizationsRequest {}
-
-message ListOrganizationsResponse {
-  repeated Organization organizations = 1;
-}
-
-// --- DocumentService Messages ---
-// **すべてのリクエストに organization_id が含まれるのがポイント**
-
-message CreateDocumentRequest {
-  string organization_id = 1;
-  string title = 2;
-  string content = 3;
-}
-
-message GetDocumentRequest {
-  string organization_id = 1;
-  string id = 2;
-}
-
-message ListDocumentsRequest {
-  string organization_id = 1;
-  int32 page_size = 2;
-  string page_token = 3;
-}
-
-message ListDocumentsResponse {
-  repeated Document documents = 1;
-  string next_page_token = 2;
-}
-
-message UpdateDocumentRequest {
-  string organization_id = 1;
-  string id = 2;
-  optional string title = 3;
-  optional string content = 4;
-}
-
-message DeleteDocumentRequest {
-  string organization_id = 1;
-  string id = 2;
-}
-
-message SearchDocumentsRequest {
-  string organization_id = 1;
-  string query = 2;
-  int32 page_size = 3;
-  string page_token = 4;
 }

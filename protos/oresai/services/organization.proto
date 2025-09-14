@@ -1,18 +1,25 @@
 syntax = "proto3";
 
-package oresai.services.organization;
+package oresai.services;
 
 import "oresai/objects/objects.proto";
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 // 組織管理サービス
 service OrganizationService {
   // 組織を作成
-  rpc CreateOrganization(CreateOrganizationRequest) returns (Organization);
+  rpc CreateOrganization(CreateOrganizationRequest) returns (oresai.objects.Organization);
   // 自分が所属する組織の一覧を取得
-  rpc ListOrganizations(ListOrganizationsRequest) returns (ListOrganizationsResponse);
+  rpc ListOrganizations(google.protobuf.Empty) returns (ListOrganizationsResponse);
   // (発展) 組織にメンバーを招待する
   // rpc InviteMember(InviteMemberRequest) returns (google.protobuf.Empty);
+}
+
+message CreateOrganizationRequest {
+  string name = 1;
+}
+
+message ListOrganizationsResponse {
+  repeated oresai.objects.Organization organizations = 1;
 }

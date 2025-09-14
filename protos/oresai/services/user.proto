@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package oresai.services;
+
+import "oresai/objects/objects.proto";
+import "google/protobuf/empty.proto";
+
+// ユーザーサービス
+service UserService {
+  // 自身のユーザー情報を取得 (認証必須)
+  rpc GetMe(google.protobuf.Empty) returns (GetMeResponse);
+}
+
+message GetMeResponse {
+  oresai.objects.User user = 1;
+}

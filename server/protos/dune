@@ -1,0 +1,19 @@
+(include_subdirs unqualified)
+
+(library
+ (name protos)
+ (flags
+  (:standard -w -50))
+ (public_name oresai.protos)
+ (libraries ocaml-protoc-plugin))
+
+(rule
+ (target
+  (dir generated))
+ (mode promote)
+ (deps
+  (source_tree proto_files)
+  buf.yaml
+  buf.gen.yaml)
+ (action
+  (run buf generate)))
