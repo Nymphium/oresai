@@ -1,0 +1,31 @@
+name: CI server
+
+on:
+  [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v5
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            cores = 0
+      - uses: determinateSystems/magic-nix-cache-action@main
+      - uses: nicknovitski/nix-develop@v1
+        with:
+          arguments: '..#server.default'
+
+      - name: Lint
+        run: |
+          dune fmt
+          dune build protos --auto-promote
+          git diff --exit-code
+
+      - name: Test
+        run: |
+          dune test
