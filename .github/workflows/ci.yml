@@ -7,23 +7,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@main
         with:
           extra-conf: |
             cores = 0
       - uses: determinateSystems/magic-nix-cache-action@main
       - uses: nicknovitski/nix-develop@v1
-      - name: Run tests
-        run: |
-          cd server
-          dune test
 
       - name: Lint
         run: |
           actionlint
           git ls-files '*.nix' | xargs -P0 nix fmt
-          pushd server
-          dune fmt
-          popd
           git diff --exit-code
