@@ -5,14 +5,14 @@ package oresai.objects;
 import "google/protobuf/timestamp.proto";
 
 message User {
-  string id = 1; // UUID
+  int64 id = 1;
   string name = 2;
   string email = 3;
   google.protobuf.Timestamp created_at = 4;
 }
 
 message UserProfile {
-  string user_id = 1;
+  int64 user_id = 1;
   string nickname = 2;
   string profile = 3;
   repeated string links = 4; // SNSなどのリンク
@@ -21,16 +21,16 @@ message UserProfile {
 
 // 組織
 message Organization {
-  string id = 1;
+  int64 id = 1;
   string name = 2;
   google.protobuf.Timestamp created_at = 3;
 }
 
 // ドキュメント
 message Document {
-  string id = 1;
-  string organization_id = 2;
-  string author_id = 3; // 作成者のユーザーID
+  int64 id = 1;
+  int64 organization_id = 2; // Organization.id
+  int64 author_id = 3; // User.id
   string title = 4;
   string content = 5;
   google.protobuf.Timestamp created_at = 6;
