@@ -6,9 +6,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./server
     steps:
       - uses: actions/checkout@v5
       - uses: DeterminateSystems/nix-installer-action@main
@@ -18,14 +15,16 @@ jobs:
       - uses: determinateSystems/magic-nix-cache-action@main
       - uses: nicknovitski/nix-develop@v1
         with:
-          arguments: '..#server.default'
+          arguments: '.#server.default'
 
       - name: Lint
+        working-directory: ./server
         run: |
           dune fmt
           dune build protos --auto-promote
           git diff --exit-code
 
       - name: Test
+        working-directory: ./server
         run: |
           dune test
