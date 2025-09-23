@@ -40,6 +40,9 @@
               pkgs.buf
               pkgs.actionlint
               pkgs.nil
+
+              pkgs.postgresql
+              pkgs.atlas
             ];
           };
         };
@@ -65,6 +68,7 @@
               ocaml-lsp-server = "*";
               utop = "*";
             };
+
 
             scope =
               let
@@ -95,16 +99,14 @@
 
             devPackages = with builtins; attrValues (pkgs.lib.getAttrs (attrNames devPackagesQuery) scope);
 
-            packages = {
-              server =
-                with builtins;
-                listToAttrs (
-                  map (p: {
-                    name = p;
-                    value = scope.${p};
-                  }) localPackages
-                );
-            };
+            packages.server =
+              with builtins;
+              listToAttrs (
+                map (p: {
+                  name = p;
+                  value = scope.${p};
+                }) localPackages
+              );
 
             devShells = rec {
               ci = pkgs.mkShell {
