@@ -4,3 +4,6 @@
 $ docker compose up -d
 $ dune build protos --auto-promote # buf generate
 ```
+
+## Design docs
+[Here](./docs/design.md)
