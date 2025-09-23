@@ -45,7 +45,7 @@ let find_by_id dbh id =
         |sql}]
     ~id
     dbh
-  >>= (function
-    | None -> Error (`NotFound "organization")
-    | Some (id, name, created_at) -> return@@ Fwd.make ~id ~name ~created_at )
+  >>= function
+  | None -> Error (`NotFound "organization")
+  | Some (id, name, created_at) -> return @@ Fwd.make ~id ~name ~created_at
 ;;

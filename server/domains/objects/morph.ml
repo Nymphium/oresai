@@ -39,6 +39,5 @@ module SealHom (M : sig
 
   let to_ = Fun.id
   let unsafe_from = Fun.id
-  let[@inline] from t =
-    if validate t then Ok t else Error (`ConvertError field)
+  let[@inline] from t = if validate t then Ok t else Error (`ConvertError field)
 end

@@ -69,7 +69,6 @@
               utop = "*";
             };
 
-
             scope =
               let
                 localPackagesQuery =

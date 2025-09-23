@@ -1,10 +1,10 @@
-name: CI on Nix
+name: CI
 
 on:
   [pull_request, push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,6 +12,18 @@ jobs:
         with:
           extra-conf: |
             cores = 0
+      - uses: determinateSystems/magic-nix-cache-action@main
+      - uses: nicknovitski/nix-develop@v1
       - name: Run tests
         run: |
-          nix develop -c dune test
+          cd server
+          dune test
+
+      - name: Lint
+        run: |
+          actionlint
+          git ls-files '*.nix' | xargs -P0 nix fmt
+          pushd server
+          dune fmt
+          popd
+          git diff --exit-code

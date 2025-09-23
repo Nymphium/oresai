@@ -5,14 +5,15 @@ module Id = Morph.Seal (struct
 module Name = Morph.SealHom (struct
     type t = string [@@deriving eq]
 
-  let field = "name"
+    let field = "name"
     let validate s = Utils.Validator.string s ~min:0 ~max:100
   end)
 
 module Email = Morph.SealHom (struct
     type t = string [@@deriving eq]
 
-  let field = "email"
+    let field = "email"
+
     let validate s =
       Utils.Validator.string s ~regexp:{|^[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+$|}
     ;;

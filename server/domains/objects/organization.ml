@@ -5,7 +5,7 @@ module Id = Morph.Seal (struct
 module Name = Morph.SealHom (struct
     type t = string [@@deriving eq]
 
-  let field = "name"
+    let field = "name"
     let validate s = Utils.Validator.string s ~min:1 ~max:100
   end)
 
