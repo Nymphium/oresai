@@ -1,1 +1,2 @@
-type t = ConvertError of string
+type t = [ `ConvertError of string ]
+[@@deriving eq]

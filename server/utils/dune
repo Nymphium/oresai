@@ -2,6 +2,8 @@
  (name utils)
  (public_name oresai.utils)
  (libraries
+  (re_export pcre)
   (re_export core))
+ (inline_tests)
  (preprocess
-  (pps ppx_deriving.std)))
+  (pps ppx_deriving.std ppx_inline_test ppx_assert)))
