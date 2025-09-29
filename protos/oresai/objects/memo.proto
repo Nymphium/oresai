@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package oresai.objects;
+
+import "google/protobuf/timestamp.proto";
+import "oresai/objects/tag.proto";
+
+message Memo {
+  int64 id = 1;
+  int64 user_id = 2;
+  string content = 3;
+  repeated oresai.objects.Tag tags = 4;
+  MemoState is_public = 7;
+
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+enum MemoState {
+  MEMO_STATE_UNSPECIFIED = 0;
+  MEMO_STATE_PUBLIC = 1;
+  MEMO_STATE_PRIVATE = 2;
+}

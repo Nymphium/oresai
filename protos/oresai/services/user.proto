@@ -2,15 +2,25 @@ syntax = "proto3";
 
 package oresai.services;
 
-import "oresai/objects/objects.proto";
 import "google/protobuf/empty.proto";
+import "oresai/objects/user.proto";
 
-// ユーザーサービス
 service UserService {
-  // 自身のユーザー情報を取得 (認証必須)
-  rpc GetMe(google.protobuf.Empty) returns (GetMeResponse);
+  rpc GetUserMe(google.protobuf.Empty) returns (GetUserMeResponse);
+
+  // Update user profile. `links` states new links: if the field is empty then the update will remove all links.
+  // If you don't want to update links, pass the current links.
+  rpc UpdateUserMe(UpdateUserMeRequest) returns (oresai.objects.User);
 }
 
-message GetMeResponse {
+message GetUserMeResponse {
   oresai.objects.User user = 1;
+}
+
+message UpdateUserMeRequest {
+  optional string name = 1;
+  optional string display_name = 2;
+  optional string bio = 3;
+  optional string avatar_url = 4;
+  repeated string links = 5; // NEW links; not append
 }

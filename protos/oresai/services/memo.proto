@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package oresai.services;
+
+import "google/protobuf/empty.proto";
+import "oresai/objects/memo.proto";
+import "oresai/objects/tag.proto";
+
+service MemoService {
+  rpc Create(CreateMemoRequest) returns (oresai.objects.Memo);
+  rpc Get(GetMemoRequest) returns (GetMemoResponse);
+  rpc List(google.protobuf.Empty) returns (ListMemoResponse);
+  rpc Update(UpdateMemoRequest) returns (oresai.objects.Memo);
+  rpc Delete(DeleteMemoRequest) returns (google.protobuf.Empty);
+}
+
+message CreateMemoRequest {
+  int64 user_id = 2;
+  string content = 3;
+  repeated oresai.objects.Tag tags = 4;
+}
+
+message GetMemoRequest {
+  int64 id = 1;
+}
+
+message GetMemoResponse {
+  optional oresai.objects.Memo memo = 1;
+}
+
+message ListMemoResponse {
+  repeated oresai.objects.Memo memos = 1;
+}
+
+message UpdateMemoRequest {
+  optional string content = 3;
+  repeated oresai.objects.Tag tags = 4;
+}
+
+message DeleteMemoRequest {
+  int64 id = 1;
+}

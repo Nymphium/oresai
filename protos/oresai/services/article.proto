@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package oresai.services;
+
+import "google/protobuf/empty.proto";
+import "oresai/objects/article.proto";
+import "oresai/objects/tag.proto";
+
+service ArticleService {
+  rpc CreateArticle(CreateArticleRequest) returns (oresai.objects.Article);
+  rpc GetArticle(GetArticleRequest) returns (oresai.objects.Article);
+  rpc UpdateArticle(UpdateArticleRequest) returns (oresai.objects.Article);
+  rpc DeleteArticle(DeleteArticleRequest) returns (google.protobuf.Empty);
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse);
+}
+
+message CreateArticleRequest {
+  int64 user_id = 1;
+  string title = 2;
+  string content = 3;
+  repeated oresai.objects.Tag tags = 4;
+}
+
+message GetArticleRequest {
+  int64 article_id = 1;
+}
+
+message UpdateArticleRequest {
+  string title = 1;
+  string content = 2;
+  repeated oresai.objects.Tag tags = 3;
+}
+
+message DeleteArticleRequest {
+  int64 article_id = 1;
+}
+
+message ListArticlesRequest {
+  int32 page_size = 1;
+  int32 offset = 3;
+}
+message ListArticlesResponse {
+  repeated oresai.objects.Article articles = 1;
+  string next_page_token = 2;
+}

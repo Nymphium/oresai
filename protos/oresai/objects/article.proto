@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package oresai.objects;
+
+import "google/protobuf/timestamp.proto";
+import "oresai/objects/tag.proto";
+
+message Article {
+  int64 id = 1;
+  int64 user_id = 2;
+  string title = 3;
+  string content = 4;
+  repeated Tag tags = 5;
+  ArticleState state = 8;
+
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+enum ArticleState {
+  ARTICLE_STATE_UNSPECIFIED = 0;
+  ARTICLE_STATE_PUBLISHED_PUBLIC = 1;
+  ARTICLE_STATE_PUBLISHED_PRIVATE = 2;
+  ARTICLE_STATE_DRAFT = 3;
+}
