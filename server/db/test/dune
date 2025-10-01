@@ -1,0 +1,13 @@
+(include_subdirs qualified)
+
+(test
+ (name test)
+ (libraries
+  oresai.let
+  oresai.db
+  eio_main
+  caqti-eio.unix
+  core
+  caqti-driver-pgx
+  alcotest)
+ (preprocess (pps ppx_rapper)))

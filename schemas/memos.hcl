@@ -60,8 +60,8 @@ table "memo_tags" {
     ref_columns = [table.tags.column.id]
   }
 }
+
 enum "memo_state" {
   schema = schema.public
   values = ["public", "private"]
 }
-

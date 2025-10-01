@@ -3,6 +3,7 @@
 (library
  (name domains)
  (public_name oresai.domains)
- (libraries str oresai.utils)
+ (libraries pcre oresai.let core kdf.scrypt mirage-crypto-rng.unix base64)
+ (inline_tests)
  (preprocess
-  (pps ppx_deriving.std)))
+  (pps ppx_deriving.std ppx_inline_test ppx_assert ppx_string_interpolation)))

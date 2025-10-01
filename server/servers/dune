@@ -1,0 +1,7 @@
+(include_subdirs unqualified)
+
+(library
+ (name server)
+ (public_name oresai.server)
+ (libraries oresai.domains oresai.let oresai.db oresai.protos h2-eio grpc-eio)
+ (preprocess (pps ppx_deriving.std ppx_string_interpolation)))

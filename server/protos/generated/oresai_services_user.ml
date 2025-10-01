@@ -9,28 +9,27 @@
   Syntax: proto3
   Parameters:
     debug=false
-    annot='[@@deriving show { with_path = false}, eq]'
+    annot='[@@deriving eq]'
     opens=[]
-    int64_as_int=true
+    int64_as_int=false
     int32_as_int=true
     fixed_as_int=false
     singleton_record=false
     prefix_output_with_package=true
 *)
 [@@@ocaml.alert "-protobuf"] (* Disable deprecation warnings for protobuf*)
-
 (**/**)
 module Runtime' = Ocaml_protoc_plugin [@@warning "-33"]
 module Imported'modules = struct
-  module Oresai_objects_objects = Oresai_objects_objects
   module Google_protobuf_empty = Google_protobuf_empty
+  module Oresai_objects_user = Oresai_objects_user
 end
 (**/**)
 module rec Oresai : sig
   module rec Services : sig
-    module rec GetMeResponse : sig
-      type t = (Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t option)[@@deriving show { with_path = false}, eq]
-      val make: ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+    module rec GetUserMeResponse : sig
+      type t = (Imported'modules.Oresai_objects_user.Oresai.Objects.User.t option) [@@deriving eq]
+      val make: ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -49,31 +48,86 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+      type make_t = ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
+    and UpdateUserMeRequest : sig
+      type t = {
+        name:string option;
+        display_name:string option;
+        bio:string option;
+        avatar_url:string option;
+        links:string list;
+        (**
+{%html:
+<p>NEW links; not append</p>
+%}
+        *)
+
+      } [@@deriving eq]
+      val make: ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      (** Helper function to generate a message using default values *)
+
+      val to_proto: t -> Runtime'.Writer.t
+      (** Serialize the message to binary format *)
+
+      val from_proto: Runtime'.Reader.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from binary format *)
+
+      val to_json: Runtime'.Json_options.t -> t -> Runtime'.Json.t
+      (** Serialize to Json (compatible with Yojson.Basic.t) *)
+
+      val from_json: Runtime'.Json.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from Json (compatible with Yojson.Basic.t) *)
+
+      val name: unit -> string
+      (** Fully qualified protobuf name of this message *)
+
+      (**/**)
+      type make_t = ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      val merge: t -> t -> t
+      val to_proto': Runtime'.Writer.t -> t -> unit
+      val from_proto_exn: Runtime'.Reader.t -> t
+      val from_json_exn: Runtime'.Json.t -> t
+      (**/**)
+    end
+
     module UserService : sig
-      module GetMe : sig
-        include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetMeResponse.t
+      module GetUserMe : sig
+        include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetUserMeResponse.t
         module Request : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type make_t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.make_t
         (** Module alias for the request message for this method call *)
 
-        module Response : Runtime'.Spec.Message with type t = GetMeResponse.t and type make_t = GetMeResponse.make_t
+        module Response : Runtime'.Spec.Message with type t = GetUserMeResponse.t and type make_t = GetUserMeResponse.make_t
         (** Module alias for the response message for this method call *)
 
       end
-      val getMe : (module Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t) * (module Runtime'.Spec.Message with type t = GetMeResponse.t)
+
+      val getUserMe : (module Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t) * (module Runtime'.Spec.Message with type t = GetUserMeResponse.t)
+      module UpdateUserMe : sig
+        include Runtime'.Service.Rpc with type Request.t = UpdateUserMeRequest.t and type Response.t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t
+        module Request : Runtime'.Spec.Message with type t = UpdateUserMeRequest.t and type make_t = UpdateUserMeRequest.make_t
+        (** Module alias for the request message for this method call *)
+
+        module Response : Runtime'.Spec.Message with type t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t and type make_t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.make_t
+        (** Module alias for the response message for this method call *)
+
+      end
+
+      val updateUserMe : (module Runtime'.Spec.Message with type t = UpdateUserMeRequest.t) * (module Runtime'.Spec.Message with type t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t)
     end
+
   end
 end = struct
   module rec Services : sig
-    module rec GetMeResponse : sig
-      type t = (Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t option)[@@deriving show { with_path = false}, eq]
-      val make: ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+    module rec GetUserMeResponse : sig
+      type t = (Imported'modules.Oresai_objects_user.Oresai.Objects.User.t option) [@@deriving eq]
+      val make: ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -92,29 +146,29 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+      type make_t = ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
-    module UserService : sig
-      module GetMe : sig
-        include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetMeResponse.t
-        module Request : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type make_t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.make_t
-        (** Module alias for the request message for this method call *)
 
-        module Response : Runtime'.Spec.Message with type t = GetMeResponse.t and type make_t = GetMeResponse.make_t
-        (** Module alias for the response message for this method call *)
+    and UpdateUserMeRequest : sig
+      type t = {
+        name:string option;
+        display_name:string option;
+        bio:string option;
+        avatar_url:string option;
+        links:string list;
+        (**
+{%html:
+<p>NEW links; not append</p>
+%}
+        *)
 
-      end
-      val getMe : (module Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t) * (module Runtime'.Spec.Message with type t = GetMeResponse.t)
-    end
-  end = struct
-    module rec GetMeResponse : sig
-      type t = (Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t option)[@@deriving show { with_path = false}, eq]
-      val make: ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+      } [@@deriving eq]
+      val make: ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -133,22 +187,77 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+      type make_t = ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      val merge: t -> t -> t
+      val to_proto': Runtime'.Writer.t -> t -> unit
+      val from_proto_exn: Runtime'.Reader.t -> t
+      val from_json_exn: Runtime'.Json.t -> t
+      (**/**)
+    end
+
+    module UserService : sig
+      module GetUserMe : sig
+        include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetUserMeResponse.t
+        module Request : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type make_t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.make_t
+        (** Module alias for the request message for this method call *)
+
+        module Response : Runtime'.Spec.Message with type t = GetUserMeResponse.t and type make_t = GetUserMeResponse.make_t
+        (** Module alias for the response message for this method call *)
+
+      end
+
+      val getUserMe : (module Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t) * (module Runtime'.Spec.Message with type t = GetUserMeResponse.t)
+      module UpdateUserMe : sig
+        include Runtime'.Service.Rpc with type Request.t = UpdateUserMeRequest.t and type Response.t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t
+        module Request : Runtime'.Spec.Message with type t = UpdateUserMeRequest.t and type make_t = UpdateUserMeRequest.make_t
+        (** Module alias for the request message for this method call *)
+
+        module Response : Runtime'.Spec.Message with type t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t and type make_t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.make_t
+        (** Module alias for the response message for this method call *)
+
+      end
+
+      val updateUserMe : (module Runtime'.Spec.Message with type t = UpdateUserMeRequest.t) * (module Runtime'.Spec.Message with type t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t)
+    end
+
+  end = struct
+    module rec GetUserMeResponse : sig
+      type t = (Imported'modules.Oresai_objects_user.Oresai.Objects.User.t option) [@@deriving eq]
+      val make: ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
+      (** Helper function to generate a message using default values *)
+
+      val to_proto: t -> Runtime'.Writer.t
+      (** Serialize the message to binary format *)
+
+      val from_proto: Runtime'.Reader.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from binary format *)
+
+      val to_json: Runtime'.Json_options.t -> t -> Runtime'.Json.t
+      (** Serialize to Json (compatible with Yojson.Basic.t) *)
+
+      val from_json: Runtime'.Json.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from Json (compatible with Yojson.Basic.t) *)
+
+      val name: unit -> string
+      (** Fully qualified protobuf name of this message *)
+
+      (**/**)
+      type make_t = ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end = struct
-      module This'_ = GetMeResponse
-      let name () = ".oresai.services.GetMeResponse"
-      type t = (Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t option)[@@deriving show { with_path = false}, eq]
-      type make_t = ?user:Imported'modules.Oresai_objects_objects.Oresai.Objects.User.t -> unit -> t
+      module This'_ = GetUserMeResponse
+      let name () = ".oresai.services.GetUserMeResponse"
+      type t = (Imported'modules.Oresai_objects_user.Oresai.Objects.User.t option) [@@deriving eq]
+      type make_t = ?user:Imported'modules.Oresai_objects_user.Oresai.Objects.User.t -> unit -> t
       let make ?user () = (user)
       let merge =
-      let merge_user = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((1, "user", "user"), (message (module Imported'modules.Oresai_objects_objects.Oresai.Objects.User))) ) in
+      let merge_user = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((1, "user", "user"), (message (module Imported'modules.Oresai_objects_user.Oresai.Objects.User))) ) in
       fun (t1_user) (t2_user) -> merge_user t1_user t2_user
-      let spec () = Runtime'.Spec.( basic_opt ((1, "user", "user"), (message (module Imported'modules.Oresai_objects_objects.Oresai.Objects.User))) ^:: nil )
+      let spec () = Runtime'.Spec.( basic_opt ((1, "user", "user"), (message (module Imported'modules.Oresai_objects_user.Oresai.Objects.User))) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
         fun writer (user) -> serialize writer user
@@ -166,19 +275,119 @@ end = struct
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
+
+    and UpdateUserMeRequest : sig
+      type t = {
+        name:string option;
+        display_name:string option;
+        bio:string option;
+        avatar_url:string option;
+        links:string list;
+        (**
+{%html:
+<p>NEW links; not append</p>
+%}
+        *)
+
+      } [@@deriving eq]
+      val make: ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      (** Helper function to generate a message using default values *)
+
+      val to_proto: t -> Runtime'.Writer.t
+      (** Serialize the message to binary format *)
+
+      val from_proto: Runtime'.Reader.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from binary format *)
+
+      val to_json: Runtime'.Json_options.t -> t -> Runtime'.Json.t
+      (** Serialize to Json (compatible with Yojson.Basic.t) *)
+
+      val from_json: Runtime'.Json.t -> (t, [> Runtime'.Result.error]) result
+      (** Deserialize from Json (compatible with Yojson.Basic.t) *)
+
+      val name: unit -> string
+      (** Fully qualified protobuf name of this message *)
+
+      (**/**)
+      type make_t = ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      val merge: t -> t -> t
+      val to_proto': Runtime'.Writer.t -> t -> unit
+      val from_proto_exn: Runtime'.Reader.t -> t
+      val from_json_exn: Runtime'.Json.t -> t
+      (**/**)
+    end = struct
+      module This'_ = UpdateUserMeRequest
+      let name () = ".oresai.services.UpdateUserMeRequest"
+      type t = {
+        name:string option;
+        display_name:string option;
+        bio:string option;
+        avatar_url:string option;
+        links:string list;
+      } [@@deriving eq]
+      type make_t = ?name:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      let make ?name ?display_name ?bio ?avatar_url ?(links = []) () = { name; display_name; bio; avatar_url; links }
+      let merge =
+      let merge_name = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((1, "name", "name"), string) ) in
+      let merge_display_name = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((2, "display_name", "displayName"), string) ) in
+      let merge_bio = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((3, "bio", "bio"), string) ) in
+      let merge_avatar_url = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((4, "avatar_url", "avatarUrl"), string) ) in
+      let merge_links = Runtime'.Merge.merge Runtime'.Spec.( repeated ((5, "links", "links"), string, not_packed) ) in
+      fun t1 t2 -> {
+      	name = (merge_name t1.name t2.name);
+      	display_name = (merge_display_name t1.display_name t2.display_name);
+      	bio = (merge_bio t1.bio t2.bio);
+      	avatar_url = (merge_avatar_url t1.avatar_url t2.avatar_url);
+      	links = (merge_links t1.links t2.links);
+       }
+      let spec () = Runtime'.Spec.( basic_opt ((1, "name", "name"), string) ^:: basic_opt ((2, "display_name", "displayName"), string) ^:: basic_opt ((3, "bio", "bio"), string) ^:: basic_opt ((4, "avatar_url", "avatarUrl"), string) ^:: repeated ((5, "links", "links"), string, not_packed) ^:: nil )
+      let to_proto' =
+        let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
+        fun writer { name; display_name; bio; avatar_url; links } -> serialize writer name display_name bio avatar_url links
+
+      let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
+      let from_proto_exn =
+        let constructor name display_name bio avatar_url links = { name; display_name; bio; avatar_url; links } in
+        Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
+      let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
+      let to_json options =
+        let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
+        fun { name; display_name; bio; avatar_url; links } -> serialize name display_name bio avatar_url links
+      let from_json_exn =
+        let constructor name display_name bio avatar_url links = { name; display_name; bio; avatar_url; links } in
+        Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
+      let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
+    end
+
     module UserService = struct
-      module GetMe = struct
+      module GetUserMe = struct
         let package_name = Some "oresai.services"
         let service_name = "UserService"
-        let method_name = "GetMe"
-        let name = "/oresai.services.UserService/GetMe"
+        let method_name = "GetUserMe"
+        let name = "/oresai.services.UserService/GetUserMe"
         module Request = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty
-        module Response = GetMeResponse
+        module Response = GetUserMeResponse
       end
-      let getMe : (module Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t) * (module Runtime'.Spec.Message with type t = GetMeResponse.t) =
+
+      let getUserMe =
         (module Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t ),
-        (module GetMeResponse : Runtime'.Spec.Message with type t = GetMeResponse.t )
+        (module GetUserMeResponse : Runtime'.Spec.Message with type t = GetUserMeResponse.t )
+
+      module UpdateUserMe = struct
+        let package_name = Some "oresai.services"
+        let service_name = "UserService"
+        let method_name = "UpdateUserMe"
+        let name = "/oresai.services.UserService/UpdateUserMe"
+        module Request = UpdateUserMeRequest
+        module Response = Imported'modules.Oresai_objects_user.Oresai.Objects.User
+      end
+
+      let updateUserMe =
+        (module UpdateUserMeRequest : Runtime'.Spec.Message with type t = UpdateUserMeRequest.t ),
+        (module Imported'modules.Oresai_objects_user.Oresai.Objects.User : Runtime'.Spec.Message with type t = Imported'modules.Oresai_objects_user.Oresai.Objects.User.t )
 
     end
+
   end
 end
+

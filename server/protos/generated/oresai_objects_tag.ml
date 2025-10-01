@@ -5,7 +5,7 @@
 (* https://github.com/andersfugmann/ocaml-protoc-plugin *)
 (********************************************************)
 (*
-  Source: google/protobuf/empty.proto
+  Source: oresai/objects/tag.proto
   Syntax: proto3
   Parameters:
     debug=false
@@ -23,23 +23,15 @@ module Runtime' = Ocaml_protoc_plugin [@@warning "-33"]
 module Imported'modules = struct
 end
 (**/**)
-module rec Google : sig
-  module rec Protobuf : sig
-
-    (**
-{%html:
-<p>A generic empty message that you can re-use to avoid defining duplicated
-empty messages in your APIs. A typical example is to use it as the request
-or the response type of an API method. For instance:</p>
-<pre><code> service Foo {
-   rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- }
-</code></pre>
-%}
-    *)
-    module rec Empty : sig
-      type t = unit [@@deriving eq]
-      val make: unit -> t
+module rec Oresai : sig
+  module rec Objects : sig
+    module rec Tag : sig
+      type t = {
+        id:int64;
+        name:string;
+        user_id:int64;
+      } [@@deriving eq]
+      val make: ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -58,7 +50,7 @@ or the response type of an API method. For instance:</p>
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = unit -> t
+      type make_t = ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -68,22 +60,14 @@ or the response type of an API method. For instance:</p>
 
   end
 end = struct
-  module rec Protobuf : sig
-
-    (**
-{%html:
-<p>A generic empty message that you can re-use to avoid defining duplicated
-empty messages in your APIs. A typical example is to use it as the request
-or the response type of an API method. For instance:</p>
-<pre><code> service Foo {
-   rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- }
-</code></pre>
-%}
-    *)
-    module rec Empty : sig
-      type t = unit [@@deriving eq]
-      val make: unit -> t
+  module rec Objects : sig
+    module rec Tag : sig
+      type t = {
+        id:int64;
+        name:string;
+        user_id:int64;
+      } [@@deriving eq]
+      val make: ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -102,7 +86,7 @@ or the response type of an API method. For instance:</p>
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = unit -> t
+      type make_t = ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -111,9 +95,13 @@ or the response type of an API method. For instance:</p>
     end
 
   end = struct
-    module rec Empty : sig
-      type t = unit [@@deriving eq]
-      val make: unit -> t
+    module rec Tag : sig
+      type t = {
+        id:int64;
+        name:string;
+        user_id:int64;
+      } [@@deriving eq]
+      val make: ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -132,36 +120,46 @@ or the response type of an API method. For instance:</p>
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = unit -> t
+      type make_t = ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end = struct
-      module This'_ = Empty
-      let name () = ".google.protobuf.Empty"
-      type t = unit [@@deriving eq]
-      type make_t = unit -> t
-      let make () = ()
+      module This'_ = Tag
+      let name () = ".oresai.objects.Tag"
+      type t = {
+        id:int64;
+        name:string;
+        user_id:int64;
+      } [@@deriving eq]
+      type make_t = ?id:int64 -> ?name:string -> ?user_id:int64 -> unit -> t
+      let make ?(id = 0L) ?(name = {||}) ?(user_id = 0L) () = { id; name; user_id }
       let merge =
-
-      fun () () -> ()
-      let spec () = Runtime'.Spec.( nil )
+      let merge_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "id", "id"), int64, (0L)) ) in
+      let merge_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "name", "name"), string, ({||})) ) in
+      let merge_user_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((3, "user_id", "userId"), int64, (0L)) ) in
+      fun t1 t2 -> {
+      	id = (merge_id t1.id t2.id);
+      	name = (merge_name t1.name t2.name);
+      	user_id = (merge_user_id t1.user_id t2.user_id);
+       }
+      let spec () = Runtime'.Spec.( basic ((1, "id", "id"), int64, (0L)) ^:: basic ((2, "name", "name"), string, ({||})) ^:: basic ((3, "user_id", "userId"), int64, (0L)) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer () -> serialize writer
+        fun writer { id; name; user_id } -> serialize writer id name user_id
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor  = () in
+        let constructor id name user_id = { id; name; user_id } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun () -> serialize
+        fun { id; name; user_id } -> serialize id name user_id
       let from_json_exn =
-        let constructor  = () in
+        let constructor id name user_id = { id; name; user_id } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end

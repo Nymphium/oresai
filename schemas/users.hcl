@@ -27,21 +27,17 @@ table "users" {
     type = varchar(255)
     null = false
   }
+  column "hashed_password" {
+    type = text
+    null = false
+  }
   column "created_at" {
     type    = timestamptz
     default = sql("now()")
     null    = false
   }
-  column "user_state" {
-    type = enum.user_state
-    null = false
-  }
   primary_key {
     columns = [column.id]
-  }
-  index "users_name_key" {
-    unique  = true
-    columns = [column.name]
   }
   index "users_email_key" {
     unique  = true
@@ -74,9 +70,3 @@ table "users_links" {
     ref_columns = [table.users.column.id]
   }
 }
-
-enum "user_state" {
-  schema = schema.public
-  values = ["public", "private"]
-}
-

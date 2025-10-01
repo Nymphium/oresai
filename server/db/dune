@@ -2,11 +2,11 @@
  (name db)
  (public_name oresai.db)
  (libraries
-  oresai.utils
+  oresai.let
   oresai.domains
   eio
   caqti-eio
   caqti-driver-pgx
   ppx_rapper_eio)
  (preprocess
-  (pps ppx_rapper)))
+  (pps ppx_rapper ppx_deriving.std)))

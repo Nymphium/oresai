@@ -7,5 +7,6 @@ end
 module Result = struct
   include Core.Result
 
+  let ( >>? ) m f = m |> map_error ~f
   let ( let* ) = ( >>= )
 end

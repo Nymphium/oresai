@@ -9,16 +9,15 @@
   Syntax: proto3
   Parameters:
     debug=false
-    annot='[@@deriving show { with_path = false}, eq]'
+    annot='[@@deriving eq]'
     opens=[]
-    int64_as_int=true
+    int64_as_int=false
     int32_as_int=true
     fixed_as_int=false
     singleton_record=false
     prefix_output_with_package=true
 *)
 [@@@ocaml.alert "-protobuf"] (* Disable deprecation warnings for protobuf*)
-
 (**/**)
 module Runtime' = Ocaml_protoc_plugin [@@warning "-33"]
 module Imported'modules = struct
@@ -28,10 +27,11 @@ module rec Oresai : sig
   module rec Services : sig
     module rec RegisterRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        name:string;
+        password:string;
+        email:string;
+      } [@@deriving eq]
+      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -50,16 +50,17 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and RegisterResponse : sig
-      type t = (string)[@@deriving show { with_path = false}, eq]
-      val make: ?user_id:string -> unit -> t
+      type t = (int64) [@@deriving eq]
+      val make: ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -78,19 +79,20 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:string -> unit -> t
+      type make_t = ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and LoginRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        email:string;
+        password:string;
+      } [@@deriving eq]
+      val make: ?email:string -> ?password:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -109,19 +111,22 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?email:string -> ?password:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and LoginResponse : sig
-      type t = (string)
+      type t = (string) [@@deriving eq]
       (**
-      JWTなどの認証トークン
+{%html:
+<p>JWTなどの認証トークン</p>
+%}
       *)
-      [@@deriving show { with_path = false}, eq]
+
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -148,6 +153,7 @@ module rec Oresai : sig
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     module AuthService : sig
       module Register : sig
         include Runtime'.Service.Rpc with type Request.t = RegisterRequest.t and type Response.t = RegisterResponse.t
@@ -158,6 +164,7 @@ module rec Oresai : sig
         (** Module alias for the response message for this method call *)
 
       end
+
       val register : (module Runtime'.Spec.Message with type t = RegisterRequest.t) * (module Runtime'.Spec.Message with type t = RegisterResponse.t)
       module Login : sig
         include Runtime'.Service.Rpc with type Request.t = LoginRequest.t and type Response.t = LoginResponse.t
@@ -168,17 +175,20 @@ module rec Oresai : sig
         (** Module alias for the response message for this method call *)
 
       end
+
       val login : (module Runtime'.Spec.Message with type t = LoginRequest.t) * (module Runtime'.Spec.Message with type t = LoginResponse.t)
     end
+
   end
 end = struct
   module rec Services : sig
     module rec RegisterRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        name:string;
+        password:string;
+        email:string;
+      } [@@deriving eq]
+      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -197,16 +207,17 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and RegisterResponse : sig
-      type t = (string)[@@deriving show { with_path = false}, eq]
-      val make: ?user_id:string -> unit -> t
+      type t = (int64) [@@deriving eq]
+      val make: ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -225,19 +236,20 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:string -> unit -> t
+      type make_t = ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and LoginRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        email:string;
+        password:string;
+      } [@@deriving eq]
+      val make: ?email:string -> ?password:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -256,19 +268,22 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?email:string -> ?password:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     and LoginResponse : sig
-      type t = (string)
+      type t = (string) [@@deriving eq]
       (**
-      JWTなどの認証トークン
+{%html:
+<p>JWTなどの認証トークン</p>
+%}
       *)
-      [@@deriving show { with_path = false}, eq]
+
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -295,6 +310,7 @@ end = struct
       val from_json_exn: Runtime'.Json.t -> t
       (**/**)
     end
+
     module AuthService : sig
       module Register : sig
         include Runtime'.Service.Rpc with type Request.t = RegisterRequest.t and type Response.t = RegisterResponse.t
@@ -305,6 +321,7 @@ end = struct
         (** Module alias for the response message for this method call *)
 
       end
+
       val register : (module Runtime'.Spec.Message with type t = RegisterRequest.t) * (module Runtime'.Spec.Message with type t = RegisterResponse.t)
       module Login : sig
         include Runtime'.Service.Rpc with type Request.t = LoginRequest.t and type Response.t = LoginResponse.t
@@ -315,15 +332,18 @@ end = struct
         (** Module alias for the response message for this method call *)
 
       end
+
       val login : (module Runtime'.Spec.Message with type t = LoginRequest.t) * (module Runtime'.Spec.Message with type t = LoginResponse.t)
     end
+
   end = struct
     module rec RegisterRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        name:string;
+        password:string;
+        email:string;
+      } [@@deriving eq]
+      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -342,7 +362,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -352,39 +372,43 @@ end = struct
       module This'_ = RegisterRequest
       let name () = ".oresai.services.RegisterRequest"
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      type make_t = ?username:string -> ?password:string -> unit -> t
-      let make ?(username = {||}) ?(password = {||}) () = { username; password }
+        name:string;
+        password:string;
+        email:string;
+      } [@@deriving eq]
+      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
+      let make ?(name = {||}) ?(password = {||}) ?(email = {||}) () = { name; password; email }
       let merge =
-      let merge_username = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "username", "username"), string, ({||})) ) in
+      let merge_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ) in
       let merge_password = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "password", "password"), string, ({||})) ) in
+      let merge_email = Runtime'.Merge.merge Runtime'.Spec.( basic ((3, "email", "email"), string, ({||})) ) in
       fun t1 t2 -> {
-      username = (merge_username t1.username t2.username);
-      password = (merge_password t1.password t2.password);
+      	name = (merge_name t1.name t2.name);
+      	password = (merge_password t1.password t2.password);
+      	email = (merge_email t1.email t2.email);
        }
-      let spec () = Runtime'.Spec.( basic ((1, "username", "username"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: basic ((3, "email", "email"), string, ({||})) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer { username; password } -> serialize writer username password
+        fun writer { name; password; email } -> serialize writer name password email
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor username password = { username; password } in
+        let constructor name password email = { name; password; email } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun { username; password } -> serialize username password
+        fun { name; password; email } -> serialize name password email
       let from_json_exn =
-        let constructor username password = { username; password } in
+        let constructor name password email = { name; password; email } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
+
     and RegisterResponse : sig
-      type t = (string)[@@deriving show { with_path = false}, eq]
-      val make: ?user_id:string -> unit -> t
+      type t = (int64) [@@deriving eq]
+      val make: ?user_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -403,7 +427,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:string -> unit -> t
+      type make_t = ?user_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -412,13 +436,13 @@ end = struct
     end = struct
       module This'_ = RegisterResponse
       let name () = ".oresai.services.RegisterResponse"
-      type t = (string)[@@deriving show { with_path = false}, eq]
-      type make_t = ?user_id:string -> unit -> t
-      let make ?(user_id = {||}) () = (user_id)
+      type t = (int64) [@@deriving eq]
+      type make_t = ?user_id:int64 -> unit -> t
+      let make ?(user_id = 0L) () = (user_id)
       let merge =
-      let merge_user_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "user_id", "userId"), string, ({||})) ) in
+      let merge_user_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ) in
       fun (t1_user_id) (t2_user_id) -> merge_user_id t1_user_id t2_user_id
-      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), string, ({||})) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
         fun writer (user_id) -> serialize writer user_id
@@ -436,12 +460,13 @@ end = struct
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
+
     and LoginRequest : sig
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      val make: ?username:string -> ?password:string -> unit -> t
+        email:string;
+        password:string;
+      } [@@deriving eq]
+      val make: ?email:string -> ?password:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -460,7 +485,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?username:string -> ?password:string -> unit -> t
+      type make_t = ?email:string -> ?password:string -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -470,42 +495,45 @@ end = struct
       module This'_ = LoginRequest
       let name () = ".oresai.services.LoginRequest"
       type t = {
-      username: string;
-      password: string;
-      }[@@deriving show { with_path = false}, eq]
-      type make_t = ?username:string -> ?password:string -> unit -> t
-      let make ?(username = {||}) ?(password = {||}) () = { username; password }
+        email:string;
+        password:string;
+      } [@@deriving eq]
+      type make_t = ?email:string -> ?password:string -> unit -> t
+      let make ?(email = {||}) ?(password = {||}) () = { email; password }
       let merge =
-      let merge_username = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "username", "username"), string, ({||})) ) in
+      let merge_email = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "email", "email"), string, ({||})) ) in
       let merge_password = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "password", "password"), string, ({||})) ) in
       fun t1 t2 -> {
-      username = (merge_username t1.username t2.username);
-      password = (merge_password t1.password t2.password);
+      	email = (merge_email t1.email t2.email);
+      	password = (merge_password t1.password t2.password);
        }
-      let spec () = Runtime'.Spec.( basic ((1, "username", "username"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "email", "email"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer { username; password } -> serialize writer username password
+        fun writer { email; password } -> serialize writer email password
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor username password = { username; password } in
+        let constructor email password = { email; password } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun { username; password } -> serialize username password
+        fun { email; password } -> serialize email password
       let from_json_exn =
-        let constructor username password = { username; password } in
+        let constructor email password = { email; password } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
+
     and LoginResponse : sig
-      type t = (string)
+      type t = (string) [@@deriving eq]
       (**
-      JWTなどの認証トークン
+{%html:
+<p>JWTなどの認証トークン</p>
+%}
       *)
-      [@@deriving show { with_path = false}, eq]
+
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -534,11 +562,7 @@ end = struct
     end = struct
       module This'_ = LoginResponse
       let name () = ".oresai.services.LoginResponse"
-      type t = (string)
-      (**
-      JWTなどの認証トークン
-      *)
-      [@@deriving show { with_path = false}, eq]
+      type t = (string) [@@deriving eq]
       type make_t = ?access_token:string -> unit -> t
       let make ?(access_token = {||}) () = (access_token)
       let merge =
@@ -562,6 +586,7 @@ end = struct
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
+
     module AuthService = struct
       module Register = struct
         let package_name = Some "oresai.services"
@@ -571,7 +596,8 @@ end = struct
         module Request = RegisterRequest
         module Response = RegisterResponse
       end
-      let register : (module Runtime'.Spec.Message with type t = RegisterRequest.t) * (module Runtime'.Spec.Message with type t = RegisterResponse.t) =
+
+      let register =
         (module RegisterRequest : Runtime'.Spec.Message with type t = RegisterRequest.t ),
         (module RegisterResponse : Runtime'.Spec.Message with type t = RegisterResponse.t )
 
@@ -583,10 +609,13 @@ end = struct
         module Request = LoginRequest
         module Response = LoginResponse
       end
-      let login : (module Runtime'.Spec.Message with type t = LoginRequest.t) * (module Runtime'.Spec.Message with type t = LoginResponse.t) =
+
+      let login =
         (module LoginRequest : Runtime'.Spec.Message with type t = LoginRequest.t ),
         (module LoginResponse : Runtime'.Spec.Message with type t = LoginResponse.t )
 
     end
+
   end
 end
+

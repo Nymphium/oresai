@@ -18,6 +18,8 @@ let string ?(min = 0) ?max ?regexp s =
   pass_min && pass_max && pass_regexp
 ;;
 
+let url s = string s ~regexp:{|^(https?://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/.*)?$|}
+
 let%test_module "string" =
   (module struct
     let%test "nosettings" =
@@ -43,6 +45,11 @@ let%test_module "string" =
     let%test "comp" =
       let sv = string ~min:3 ~max:5 ~regexp:{|[a-z]+|} in
       sv "abc"
+    ;;
+
+    let%test "url" =
+      let sv = url in
+      sv "https://example.com"
     ;;
   end)
 ;;

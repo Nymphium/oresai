@@ -69,4 +69,3 @@ enum "article_state" {
   schema = schema.public
   values = ["published_public", "published_private", "draft"]
 }
-

@@ -10,6 +10,9 @@ depends: [
   "dune" {>= "3.20.0"}
   "pcre"
   "core"
+  "kdf"
+  "mirage-crypto-rng"
+  "base64"
   "grpc-eio"
   "h2-eio"
   "caqti-eio"
