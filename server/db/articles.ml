@@ -120,7 +120,8 @@ open struct
   end
 end
 
-(** [verify] *verifies* the given [id] and returns the proper id type if it exists in the DB. *)
+(** [verify] *verifies* the given [id] and returns the proper id type if it
+    exists in the DB. *)
 let verify id =
   let db = Effect.perform @@ Effects.Get_conn in
   [%rapper
@@ -157,8 +158,9 @@ let create ~title ~content ~user_id ~tag_ids ~state =
   return @@ Fwd.make ~id ~title ~content ~user_id ~tags ~created_at ~updated_at ~state ()
 ;;
 
-(** [update] updates the target id with the given fields. If [tag_ids] is [None], then nothing changes.
-    Otherwise, [tag_ids] is updated to that list; i.e., if [Some []] is given, then all the tags are unrelated. *)
+(** [update] updates the target id with the given fields. If [tag_ids] is
+    [None], then nothing changes. Otherwise, [tag_ids] is updated to that list;
+    i.e., if [Some []] is given, then all the tags are unrelated. *)
 let update id ?title ?content ?tag_ids ?state () =
   let db = Effect.perform @@ Effects.Transaction in
   let title = Option.map ~f:Fwd.Title.to_ title in

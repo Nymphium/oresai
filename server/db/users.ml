@@ -38,17 +38,18 @@ module Model = struct
     let base_t = Caqti_type.(Std.t7 int64 string string string string string ptime) in
     let encode fwd =
       let open Let.Result in
-      let* created_at =
+      let* created_at' =
         Fwd.created_at fwd |> Ptime.of_float_s |> Result.of_option ~error:"created_at"
       in
       return
-        ( Fwd.id fwd
-        , Fwd.name fwd
-        , Fwd.email fwd
-        , Fwd.display_name fwd
-        , Fwd.bio fwd
-        , Fwd.avatar_url fwd
-        , created_at )
+        Fwd.(
+          ( id fwd
+          , name fwd
+          , email fwd
+          , display_name fwd
+          , bio fwd
+          , avatar_url fwd
+          , created_at' ))
     in
     let decode (id, name, email, display_name, bio, avatar_url, created_at) =
       let id = Fwd.Id.from id in
@@ -122,7 +123,8 @@ open struct
   end
 end
 
-(** [verify] *verifies* the given [id] and returns the proper id type with password if it exists in the DB. *)
+(** [verify] *verifies* the given [id] and returns the proper id type with
+    password if it exists in the DB. *)
 let verify id =
   let db = Effect.perform @@ Effects.Get_conn in
   [%rapper
@@ -159,8 +161,9 @@ let create ~name ~email ~display_name ~bio ~hashed_password:password ~avatar_url
   return @@ Fwd.make ~id ~name ~email ~display_name ~bio ~avatar_url ~links ~created_at ()
 ;;
 
-(** [update] updates the target id with the given fields. If [links] is [None], then nothing changes.
-    Otherwise, [links] is updated to that list; i.e., if [Some []] is given, then all the links are removed. *)
+(** [update] updates the target id with the given fields. If [links] is [None],
+    then nothing changes. Otherwise, [links] is updated to that list; i.e., if
+    [Some []] is given, then all the links are removed. *)
 let update id ?name ?email ?display_name ?bio ?password ?avatar_url ?links () =
   let db = Effect.perform @@ Effects.Transaction in
   let name = Option.map ~f:Fwd.Name.to_ name in

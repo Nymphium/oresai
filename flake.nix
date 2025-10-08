@@ -9,7 +9,7 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     opam-nix = {
-      url = "github:tweag/opam-nix";
+      url = "github:Nymphium/opam-nix?ref=libpq-ssl";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
@@ -41,6 +41,7 @@
               pkgs.actionlint
               pkgs.nil
 
+              pkgs.openssl
               pkgs.postgresql
               pkgs.atlas
             ];
@@ -82,8 +83,6 @@
                 query = {
                   ocaml-system = "*";
                   ocamlformat = "*";
-                  # If you want to specify a version from .ocamlformat file, uncomment the line below
-                  # pkgs.callPackage ./nix/ocamlformat.nix { };
                 }
                 // devPackagesQuery
                 // localPackagesQuery;

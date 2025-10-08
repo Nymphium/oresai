@@ -10,18 +10,12 @@ module Model = struct
         let open Let.Result in
         let id = Fwd.Id.to_ id in
         let* created_at =
-          created_at
-          |> Fwd.CreatedAt.to_
-          |> Ptime.of_float_s
-          |> function
+          created_at |> Fwd.CreatedAt.to_ |> Ptime.of_float_s |> function
           | Some p -> Ok p
           | None -> Error "created_at"
         in
         let* updated_at =
-          updated_at
-          |> Fwd.UpdatedAt.to_
-          |> Ptime.of_float_s
-          |> function
+          updated_at |> Fwd.UpdatedAt.to_ |> Ptime.of_float_s |> function
           | Some p -> Ok p
           | None -> Error "updated_at"
         in
@@ -62,16 +56,12 @@ module Model = struct
     let encode fwd =
       let open Let.Result in
       let* created_at =
-        Fwd.created_at fwd
-        |> Ptime.of_float_s
-        |> function
+        Fwd.created_at fwd |> Ptime.of_float_s |> function
         | Some p -> Ok p
         | None -> Error "created_at"
       in
       let* updated_at =
-        Fwd.updated_at fwd
-        |> Ptime.of_float_s
-        |> function
+        Fwd.updated_at fwd |> Ptime.of_float_s |> function
         | Some p -> Ok p
         | None -> Error "updated_at"
       in
@@ -96,7 +86,8 @@ module Model = struct
   ;;
 end
 
-(** [verify] *verifies* the given [id] and returns the proper id type if it exists in the DB. *)
+(** [verify] *verifies* the given [id] and returns the proper id type if it
+    exists in the DB. *)
 let verify id =
   let db = Effect.perform @@ Effects.Get_conn in
   [%rapper

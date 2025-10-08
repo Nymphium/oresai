@@ -4,9 +4,9 @@
  (libraries
   oresai.let
   oresai.domains
-  eio
+  nloge
   caqti-eio
-  caqti-driver-pgx
+  caqti-driver-postgresql
   ppx_rapper_eio)
  (preprocess
   (pps ppx_rapper ppx_deriving.std)))

@@ -35,7 +35,8 @@ module Model = struct
   ;;
 end
 
-(** [verify] *verifies* the given [id] and returns the proper id type if it exists in the DB. *)
+(** [verify] *verifies* the given [id] and returns the proper id type if it
+    exists in the DB. *)
 let verify id =
   let db = Effect.perform @@ Effects.Get_conn in
   [%rapper

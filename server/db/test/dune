@@ -5,9 +5,11 @@
  (libraries
   oresai.let
   oresai.db
+  oresai.logs_compat
   eio_main
   caqti-eio.unix
   core
-  caqti-driver-pgx
+  caqti-driver-postgresql
   alcotest)
- (preprocess (pps ppx_rapper)))
+ (preprocess
+  (pps ppx_rapper)))

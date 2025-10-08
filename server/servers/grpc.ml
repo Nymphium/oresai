@@ -17,8 +17,7 @@ let create_unary_handler (type req) (type res) (rpc : (req, res) rpc) ~h =
       , (module Response : Spec.Message with type t = res) ))
   in
   let h =
-    Fn.(flip compose) (create_handler rpc h)
-    @@ function
+    Fn.(flip compose) (create_handler rpc h) @@ function
     | Error _ -> failwith "error"
     | Ok res -> Grpc__Status.(v OK), Some res
   in

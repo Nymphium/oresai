@@ -40,7 +40,8 @@ struct
 end :
   Morph.SealedHom with type bwd = string)
 
-(** [verify] checks whether the given [plain] matches the plain text of [hashed]. *)
+(** [verify] checks whether the given [plain] matches the plain text of
+    [hashed]. *)
 let verify ~plain ~hashed =
   match String.split ~on:'$' @@ to_ hashed with
   | [ ""; alg; _params; salt_b64; dk_b64 ] when String.equal alg hash_alg ->

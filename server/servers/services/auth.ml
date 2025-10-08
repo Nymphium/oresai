@@ -12,9 +12,9 @@ open struct
       ~h:(fun ~decode ~encode buf ->
         let open Let.Result in
         let* user_id =
-          let* request = Op.Reader.create buf |> decode |> Errors.collect in
-          let* name = Domains.Objects.User.Name.from request.name |> Errors.collect in
-          let* email = Domains.Objects.User.Email.from request.email |> Errors.collect in
+          let* request = Op.Reader.create buf |> decode in
+          let* name = Domains.Objects.User.Name.from request.name in
+          let* email = Domains.Objects.User.Email.from request.email in
           Db.Users.create ~name ~email >>| Domains.Objects.User.id
         in
         let reply = Rpc.Response.make ~user_id () in

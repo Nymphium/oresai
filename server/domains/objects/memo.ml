@@ -52,7 +52,7 @@ type t =
   ; created_at : CreatedAt.t
   ; updated_at : UpdatedAt.t
   }
-[@@deriving eq,make, show { with_path = false }]
+[@@deriving eq, make, show { with_path = false }]
 
 let id { id; _ } = Id.to_ id
 let user_id { user_id; _ } = UserId.to_ user_id

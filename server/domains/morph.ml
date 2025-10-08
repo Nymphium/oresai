@@ -14,7 +14,8 @@ module type SealedHom = sig
   val to_ : t -> bwd
   val from : bwd -> (t, [> Errors.t ]) Result.t
 
-  (** [unsafe_from] converts as if by isomorphism, which is dangerous. Use it only when the conversion is valid. *)
+  (** [unsafe_from] converts as if by isomorphism, which is dangerous. Use it
+      only when the conversion is valid. *)
   val unsafe_from : bwd -> t
 end
 

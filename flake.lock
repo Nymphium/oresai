@@ -81,15 +81,16 @@
         "opam2json": "opam2json"
       },
       "locked": {
-        "lastModified": 1758871449,
-        "narHash": "sha256-t4BaLmhkEQ4WMPKHn2f54tSkhi+8kTA4bGMrHAO/CR4=",
-        "owner": "tweag",
+        "lastModified": 1759948011,
+        "narHash": "sha256-w4McMHaBuX3aavLBZsd6coRfVR2PGQMqTZBBGT976Do=",
+        "owner": "Nymphium",
         "repo": "opam-nix",
-        "rev": "9ba2a2c4760e89c51a598be85cb95e92bf9eebc1",
+        "rev": "b394d0a34dcf7b1727484eb176b40b519139c6ad",
         "type": "github"
       },
       "original": {
-        "owner": "tweag",
+        "owner": "Nymphium",
+        "ref": "libpq-ssl",
         "repo": "opam-nix",
         "type": "github"
       }
@@ -113,11 +114,11 @@
     "opam-repository": {
       "flake": false,
       "locked": {
-        "lastModified": 1759303540,
-        "narHash": "sha256-YiKM+IYVipQ+lrYmUlkvc4RwwRTP6+sORch2ItkrMio=",
+        "lastModified": 1759935161,
+        "narHash": "sha256-QZ/ZPMGf1rplhr0wHNQU6/03okVGjGkpbD3qUr9p62A=",
         "owner": "ocaml",
         "repo": "opam-repository",
-        "rev": "2897aaaafd768817bdcfeb67c2c47ddb0724246e",
+        "rev": "e04d4915e84a4271aac7a7be9b96c5e47bb92176",
         "type": "github"
       },
       "original": {

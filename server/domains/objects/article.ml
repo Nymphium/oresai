@@ -3,7 +3,6 @@ module Id = Morph.Seal (struct
   end)
 
 module UserId = User.Id
-
 module TagId = Tag.Id
 
 module Title = Morph.SealHom (struct

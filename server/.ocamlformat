@@ -1,2 +1,3 @@
-profile=janestreet
+profile = janestreet
 ocaml-version = 5.3
+break-infix-before-func = false

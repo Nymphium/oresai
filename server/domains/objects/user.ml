@@ -60,7 +60,7 @@ type t =
   ; links : Links.Element.t list
   ; created_at : CreatedAt.t (** unix time *)
   }
-  [@@deriving eq, make, show { with_path =false}]
+[@@deriving eq, make, show { with_path = false }]
 
 let id { id; _ } = Id.to_ id
 let name { name; _ } = Name.to_ name

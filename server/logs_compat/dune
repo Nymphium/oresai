@@ -1,0 +1,8 @@
+(library
+ (name logs_compat)
+ (public_name oresai.logs_compat)
+ (libraries logs eio pcre ptime.clock eio_main) ; it may dune bug.
+ (inline_tests
+  (libraries eio_main eio.mock))
+ (preprocess
+  (pps ppx_assert ppx_expect)))
