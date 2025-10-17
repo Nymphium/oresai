@@ -9,7 +9,7 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     opam-nix = {
-      url = "github:Nymphium/opam-nix?ref=libpq-ssl";
+      url = "github:tweag/opam-nix";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-utils.follows = "flake-utils";
@@ -122,6 +122,30 @@
           {
             inherit devShells packages;
           };
+        client =
+          let
+            nodejs = pkgs.nodejs_24;
+            tslsp = pkgs.typescript-language-server.override {
+              inherit nodejs;
+            };
+            pnpm = pkgs.pnpm.override {
+              inherit nodejs;
+            };
+            js = [ nodejs pnpm ];
+            devShells = rec {
+              ci = pkgs.mkShellNoCC {
+                inputsFrom = [ base.devShells.default ];
+                packages = js;
+              };
+              default = pkgs.mkShellNoCC {
+                inputsFrom = [ ci ];
+                packages = [ tslsp ];
+              };
+            };
+          in
+          {
+            inherit devShells;
+          };
       in
       {
         legacyPackages = pkgs;
@@ -132,6 +156,7 @@
         inherit formatter;
         devShells = base.devShells // {
           server = server.devShells;
+          client = client.devShells;
         };
       }
     );

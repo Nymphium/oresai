@@ -17,6 +17,8 @@ depends: [
   "grpc-eio"
   "h2-eio"
   "caqti-eio"
+  "oenv"
+  "ppxlib" { < "0.37.0" } # for ppx_rapper
   "caqti-driver-postgresql"
   "ppx_rapper_eio"
   "eio_main"
