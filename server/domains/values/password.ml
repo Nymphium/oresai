@@ -34,18 +34,35 @@ struct
     return @@ [%string {|$(prefix)$(salt_b64)$$$(dk_b64)|}]
   ;;
 
-  let unsafe_from =
-    Fn.compose Result.(Fn.compose ok_or_failwith (map_error ~f:Errors.show)) from
-  ;;
+  let unsafe_from = Fun.id
+  (* Fn.compose Result.(Fn.compose ok_or_failwith (map_error ~f:Errors.show)) from *)
 end :
   Morph.SealedHom with type bwd = string)
 
 (** [verify] checks whether the given [plain] matches the plain text of
     [hashed]. *)
 let verify ~plain ~hashed =
+  let parse_param x value =
+    String.chop_prefix ~prefix:[%string {|$(x)=|}] value
+    |> Option.value_map
+         ~default:(Error (`DecryptionError [%string {|invalid $(x) param|}]))
+         ~f:(fun s ->
+           Int.of_string_opt s
+           |> Result.of_option ~error:(`DecryptionError [%string {|invalid $(x) param|}]))
+  in
   match String.split ~on:'$' @@ to_ hashed with
-  | [ ""; alg; _params; salt_b64; dk_b64 ] when String.equal alg hash_alg ->
+  | [ ""; alg; params; salt_b64; dk_b64 ] when String.equal alg hash_alg ->
     let open Let.Result in
+    let params = String.split ~on:',' params in
+    let* hash_n, hash_r, hash_p =
+      match params with
+      | [ n; r; p ] ->
+        let* n = parse_param "n" n in
+        let* r = parse_param "r" r in
+        let* p = parse_param "p" p in
+        return (n, r, p)
+      | _ -> Error (`DecryptionError "invalid hashed string params format")
+    in
     let* salt =
       Base64.decode salt_b64 |> map_error ~f:(fun (`Msg msg) -> `DecryptionError msg)
     in

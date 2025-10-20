@@ -2,12 +2,20 @@ version: v2
 
 clean: true
 
+inputs:
+  - directory: proto_files
+  - git_repo: https://github.com/grpc/grpc-proto
+    branch: master
+    paths:
+      - grpc/health/v1
+      # - grpc/reflection/v1
+
 managed:
   enabled: true
 
 plugins:
-- local: [protoc-gen-ocaml]
-  opt: int64_as_int=false;prefix_output_with_package=true;annot=[@@deriving eq]
-  out: generated
-  include_imports: true
-  include_wkt: true
+  - local: [protoc-gen-ocaml]
+    opt: int64_as_int=false;prefix_output_with_package=true;annot=[@@deriving eq]
+    out: generated
+    include_imports: true
+    include_wkt: true

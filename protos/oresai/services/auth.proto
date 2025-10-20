@@ -11,6 +11,10 @@ message RegisterRequest {
   string name = 1;
   string password = 2;
   string email = 3;
+  string display_name = 4;
+  string bio = 5;
+  string avatar_url = 6;
+  repeated string links = 7;
 }
 
 message RegisterResponse {
@@ -23,5 +27,5 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string access_token = 1; // JWTなどの認証トークン
+  string access_token = 1; // JWT token
 }

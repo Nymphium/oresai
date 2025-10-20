@@ -13,7 +13,6 @@
  (mode promote)
  (deps
   (source_tree proto_files)
-  buf.yaml
   buf.gen.yaml)
  (action
   (run buf generate)))

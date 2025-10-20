@@ -60,7 +60,7 @@ module Model = struct
       let avatar_url = Domains.Values.Url.unsafe_from avatar_url in
       let created_at = created_at |> Ptime.to_float_s |> Fwd.CreatedAt.from in
       Result.return
-      @@ Fwd.make ~id ~name ~display_name ~email ~bio ~avatar_url ~created_at ()
+      @@ Fwd.make ~id ~name ~display_name ~email ~bio ~avatar_url ~created_at ~links:[]
     in
     Caqti_type.custom ~encode ~decode base_t
   ;;
@@ -158,7 +158,7 @@ let create ~name ~email ~display_name ~bio ~hashed_password:password ~avatar_url
       db
   in
   let* () = if List.is_empty links then Result.return () else Links.set db id links in
-  return @@ Fwd.make ~id ~name ~email ~display_name ~bio ~avatar_url ~links ~created_at ()
+  return @@ Fwd.make ~id ~name ~email ~display_name ~bio ~avatar_url ~links ~created_at
 ;;
 
 (** [update] updates the target id with the given fields. If [links] is [None],
@@ -250,4 +250,23 @@ let find_by_email email =
   | Some t ->
     let* links = Links.list db t.id in
     return @@ Some { t with links }
+;;
+
+let check_password id raw_password =
+  let db = Effect.perform @@ Effects.Transaction in
+  let open Let.Result in
+  let* password =
+    [%rapper
+      get_one
+        {|
+        SELECT @string{hashed_password}
+        FROM users
+        WHERE id = %Model.Id{id}
+      |}]
+      ~id
+      db
+  in
+  Domains.Values.Password.verify
+    ~hashed:(Domains.Values.Password.unsafe_from password)
+    ~plain:raw_password
 ;;

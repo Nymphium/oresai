@@ -3,7 +3,7 @@ open T
 
 let t = (module T : Alcotest.TESTABLE with type t = T.t)
 
-let fixture ~name ~email ~display_name ~bio ~avatar_url ?(links = []) =
+let fixture ~name ~email ~display_name ~bio ~avatar_url ?(links = []) () =
   let name = Name.unsafe_from name in
   let email = Email.unsafe_from email in
   let display_name = DisplayName.unsafe_from display_name in

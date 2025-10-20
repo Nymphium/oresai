@@ -10,12 +10,12 @@ depends: [
   "dune" {>= "3.20.0"}
   "pcre"
   "core"
-  "nloge"
   "kdf"
   "mirage-crypto-rng"
   "base64"
   "grpc-eio"
   "h2-eio"
+  "jwto"
   "caqti-eio"
   "oenv"
   "ppxlib" { < "0.37.0" } # for ppx_rapper
@@ -33,4 +33,6 @@ depends: [
 pin-depends: [
   ["ppx_rapper_eio.dev" "git+https://github.com/roddyyaga/ppx_rapper#5b0e62def2d5cc6cbe3dedec1ecb289bee350f9a" ]
   ["ppx_rapper.dev" "git+https://github.com/roddyyaga/ppx_rapper#5b0e62def2d5cc6cbe3dedec1ecb289bee350f9a" ]
+  ["grpc-eio.dev" "git+https://github.com/dialohq/ocaml-grpc#b629b55fc15964c5e9455058725519d3f7cfc9a7"]
+  ["grpc.dev" "git+https://github.com/dialohq/ocaml-grpc#b629b55fc15964c5e9455058725519d3f7cfc9a7"]
 ]

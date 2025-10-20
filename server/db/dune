@@ -4,7 +4,6 @@
  (libraries
   oresai.let
   oresai.domains
-  nloge
   caqti-eio
   caqti-driver-postgresql
   ppx_rapper_eio)

@@ -1,3 +1,5 @@
+open Core
+
 module Id = Morph.Seal (struct
     type t = int64 [@@deriving eq, show { with_path = false }]
   end)
@@ -38,12 +40,15 @@ module AvatarUrl = Values.Url
 module Links = struct
   module Element = Values.Url
 
-  include Morph.SealHom (struct
-      type t = Element.bwd list [@@deriving eq, show { with_path = false }]
+  type t = Element.t list [@@deriving eq, show { with_path = false }]
 
-      let field = "links"
-      let validate s = Validator.list s ~element:Element.validate
-    end)
+  let from bwd =
+    List.fold_left bwd ~init:(Ok []) ~f:(fun acc url ->
+      let open Let.Result in
+      let* urls = acc in
+      let* url = Element.from url in
+      return (url :: urls))
+  ;;
 end
 
 module CreatedAt = Morph.Seal (struct
@@ -57,7 +62,7 @@ type t =
   ; display_name : DisplayName.t
   ; bio : Bio.t
   ; avatar_url : AvatarUrl.t
-  ; links : Links.Element.t list
+  ; links : Links.t
   ; created_at : CreatedAt.t (** unix time *)
   }
 [@@deriving eq, make, show { with_path = false }]
@@ -68,5 +73,5 @@ let email { email; _ } = Email.to_ email
 let display_name { display_name; _ } = DisplayName.to_ display_name
 let bio { bio; _ } = Bio.to_ bio
 let avatar_url { avatar_url; _ } = Values.Url.to_ avatar_url
-let links { links; _ } = List.map Values.Url.to_ links
+let links { links; _ } = List.map ~f:Values.Url.to_ links
 let created_at { created_at; _ } = CreatedAt.to_ created_at

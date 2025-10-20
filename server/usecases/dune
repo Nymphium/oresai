@@ -1,0 +1,6 @@
+(library
+ (name usecases)
+ (public_name oresai.usecases)
+ (libraries jwto oresai.domains oresai.db oresai.let)
+ (preprocess
+  (pps ppx_deriving.std ppx_string_interpolation)))

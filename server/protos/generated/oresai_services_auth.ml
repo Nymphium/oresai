@@ -30,8 +30,12 @@ module rec Oresai : sig
         name:string;
         password:string;
         email:string;
+        display_name:string;
+        bio:string;
+        avatar_url:string;
+        links:string list;
       } [@@deriving eq]
-      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
+      val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -50,7 +54,7 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -123,7 +127,7 @@ module rec Oresai : sig
       type t = (string) [@@deriving eq]
       (**
 {%html:
-<p>JWTなどの認証トークン</p>
+<p>JWT token</p>
 %}
       *)
 
@@ -187,8 +191,12 @@ end = struct
         name:string;
         password:string;
         email:string;
+        display_name:string;
+        bio:string;
+        avatar_url:string;
+        links:string list;
       } [@@deriving eq]
-      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
+      val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -207,7 +215,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -280,7 +288,7 @@ end = struct
       type t = (string) [@@deriving eq]
       (**
 {%html:
-<p>JWTなどの認証トークン</p>
+<p>JWT token</p>
 %}
       *)
 
@@ -342,8 +350,12 @@ end = struct
         name:string;
         password:string;
         email:string;
+        display_name:string;
+        bio:string;
+        avatar_url:string;
+        links:string list;
       } [@@deriving eq]
-      val make: ?name:string -> ?password:string -> ?email:string -> unit -> t
+      val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -362,7 +374,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
+      type make_t = ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -375,33 +387,45 @@ end = struct
         name:string;
         password:string;
         email:string;
+        display_name:string;
+        bio:string;
+        avatar_url:string;
+        links:string list;
       } [@@deriving eq]
-      type make_t = ?name:string -> ?password:string -> ?email:string -> unit -> t
-      let make ?(name = {||}) ?(password = {||}) ?(email = {||}) () = { name; password; email }
+      type make_t = ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
+      let make ?(name = {||}) ?(password = {||}) ?(email = {||}) ?(display_name = {||}) ?(bio = {||}) ?(avatar_url = {||}) ?(links = []) () = { name; password; email; display_name; bio; avatar_url; links }
       let merge =
       let merge_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ) in
       let merge_password = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "password", "password"), string, ({||})) ) in
       let merge_email = Runtime'.Merge.merge Runtime'.Spec.( basic ((3, "email", "email"), string, ({||})) ) in
+      let merge_display_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((4, "display_name", "displayName"), string, ({||})) ) in
+      let merge_bio = Runtime'.Merge.merge Runtime'.Spec.( basic ((5, "bio", "bio"), string, ({||})) ) in
+      let merge_avatar_url = Runtime'.Merge.merge Runtime'.Spec.( basic ((6, "avatar_url", "avatarUrl"), string, ({||})) ) in
+      let merge_links = Runtime'.Merge.merge Runtime'.Spec.( repeated ((7, "links", "links"), string, not_packed) ) in
       fun t1 t2 -> {
       	name = (merge_name t1.name t2.name);
       	password = (merge_password t1.password t2.password);
       	email = (merge_email t1.email t2.email);
+      	display_name = (merge_display_name t1.display_name t2.display_name);
+      	bio = (merge_bio t1.bio t2.bio);
+      	avatar_url = (merge_avatar_url t1.avatar_url t2.avatar_url);
+      	links = (merge_links t1.links t2.links);
        }
-      let spec () = Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: basic ((3, "email", "email"), string, ({||})) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: basic ((3, "email", "email"), string, ({||})) ^:: basic ((4, "display_name", "displayName"), string, ({||})) ^:: basic ((5, "bio", "bio"), string, ({||})) ^:: basic ((6, "avatar_url", "avatarUrl"), string, ({||})) ^:: repeated ((7, "links", "links"), string, not_packed) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer { name; password; email } -> serialize writer name password email
+        fun writer { name; password; email; display_name; bio; avatar_url; links } -> serialize writer name password email display_name bio avatar_url links
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor name password email = { name; password; email } in
+        let constructor name password email display_name bio avatar_url links = { name; password; email; display_name; bio; avatar_url; links } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun { name; password; email } -> serialize name password email
+        fun { name; password; email; display_name; bio; avatar_url; links } -> serialize name password email display_name bio avatar_url links
       let from_json_exn =
-        let constructor name password email = { name; password; email } in
+        let constructor name password email display_name bio avatar_url links = { name; password; email; display_name; bio; avatar_url; links } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
@@ -530,7 +554,7 @@ end = struct
       type t = (string) [@@deriving eq]
       (**
 {%html:
-<p>JWTなどの認証トークン</p>
+<p>JWT token</p>
 %}
       *)
 

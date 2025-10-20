@@ -1,13 +1,17 @@
-(include_subdirs unqualified)
+(include_subdirs qualified)
 
-(library
- (name server)
- (public_name oresai.server)
+(executable
+ (name main)
  (libraries
   oresai.domains
   oresai.let
   oresai.db
+  oresai.usecases
   oresai.protos
+  oresai.logs_compat
+  oenv
+  jwto
+  eio_main
   h2-eio
   grpc-eio)
  (preprocess

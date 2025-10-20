@@ -7,10 +7,9 @@ let () =
   @@ Eio_main.run
   @@ fun stdenv ->
   Eio.Switch.run @@ fun sw ->
-  Logs.set_reporter @@ Logs_compat.reporter ~env:stdenv ~sw;
+  let stdout = Eio.Stdenv.stdout stdenv in
+  Logs.set_reporter @@ Logs_compat.reporter ~env:stdenv ~sw ~stdout;
   Logs.(set_level @@ Some Debug);
-  let clock = Eio.Stdenv.clock stdenv in
-  Nloge.run ~clock ~sw ~outputs:[ stdenv#stdout ] ~level:`Debug @@ fun () ->
   let url =
     Uri.make
       ~scheme:"postgresql"
