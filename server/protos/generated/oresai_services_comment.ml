@@ -118,6 +118,7 @@ module rec Oresai : sig
     end
 
     module CommentService : sig
+      val package_service_name : string
       module Add : sig
         include Runtime'.Service.Rpc with type Request.t = AddCommentRequest.t and type Response.t = Imported'modules.Oresai_objects_comment.Oresai.Objects.Comment.t
         module Request : Runtime'.Spec.Message with type t = AddCommentRequest.t and type make_t = AddCommentRequest.make_t
@@ -237,6 +238,7 @@ end = struct
     end
 
     module CommentService : sig
+      val package_service_name : string
       module Add : sig
         include Runtime'.Service.Rpc with type Request.t = AddCommentRequest.t and type Response.t = Imported'modules.Oresai_objects_comment.Oresai.Objects.Comment.t
         module Request : Runtime'.Spec.Message with type t = AddCommentRequest.t and type make_t = AddCommentRequest.make_t
@@ -452,6 +454,7 @@ end = struct
     end
 
     module CommentService = struct
+      let package_service_name = "oresai.services.CommentService"
       module Add = struct
         let package_name = Some "oresai.services"
         let service_name = "CommentService"
@@ -483,3 +486,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "oresai/services/comment.proto"
+  let file_descriptor_proto = "\n\029oresai/services/comment.proto\018\015oresai.services\026\028oresai/objects/comment.proto\"\140\001\n\017AddCommentRequest\018\023\n\007user_id\024\001 \001(\003R\006userId\018\024\n\007content\024\002 \001(\tR\007content\018\031\n\narticle_id\024\003 \001(\003H\000R\tarticleId\018\025\n\007memo_id\024\004 \001(\003H\000R\006memoIdB\b\n\006target\"[\n\019ListCommentsRequest\018\031\n\narticle_id\024\001 \001(\003H\000R\tarticleId\018\025\n\007memo_id\024\002 \001(\003H\000R\006memoIdB\b\n\006target\"K\n\020ListCommentsResponse\0183\n\bcomments\024\001 \003(\0112\023.oresai.objects.CommentR\bcomments2\169\001\n\014CommentService\018B\n\003Add\018\".oresai.services.AddCommentRequest\026\023.oresai.objects.Comment\018S\n\004List\018$.oresai.services.ListCommentsRequest\026%.oresai.services.ListCommentsResponseB\128\001\n\019com.oresai.servicesB\012CommentProtoP\001\162\002\003OSX\170\002\015Oresai.Services\202\002\015Oresai\\Services\226\002\027Oresai\\Services\\GPBMetadata\234\002\016Oresai::ServicesJ\188\005\n\006\018\004\000\000\030\001\n\b\n\001\012\018\003\000\000\018\n\b\n\001\002\018\003\002\000\024\n\t\n\002\003\000\018\003\004\000&\n\n\n\002\006\000\018\004\006\000\t\001\n\n\n\003\006\000\001\018\003\006\b\022\n\011\n\004\006\000\002\000\018\003\007\002>\n\012\n\005\006\000\002\000\001\018\003\007\006\t\n\012\n\005\006\000\002\000\002\018\003\007\n\027\n\012\n\005\006\000\002\000\003\018\003\007&<\n\011\n\004\006\000\002\001\018\003\b\002?\n\012\n\005\006\000\002\001\001\018\003\b\006\n\n\012\n\005\006\000\002\001\002\018\003\b\011\030\n\012\n\005\006\000\002\001\003\018\003\b)=\n\n\n\002\004\000\018\004\011\000\019\001\n\n\n\003\004\000\001\018\003\011\b\025\n\011\n\004\004\000\002\000\018\003\012\002\020\n\012\n\005\004\000\002\000\005\018\003\012\002\007\n\012\n\005\004\000\002\000\001\018\003\012\b\015\n\012\n\005\004\000\002\000\003\018\003\012\018\019\n\011\n\004\004\000\002\001\018\003\r\002\021\n\012\n\005\004\000\002\001\005\018\003\r\002\b\n\012\n\005\004\000\002\001\001\018\003\r\t\016\n\012\n\005\004\000\002\001\003\018\003\r\019\020\n\012\n\004\004\000\b\000\018\004\015\002\018\003\n\012\n\005\004\000\b\000\001\018\003\015\b\014\n\011\n\004\004\000\002\002\018\003\016\004\025\n\012\n\005\004\000\002\002\005\018\003\016\004\t\n\012\n\005\004\000\002\002\001\018\003\016\n\020\n\012\n\005\004\000\002\002\003\018\003\016\023\024\n\011\n\004\004\000\002\003\018\003\017\004\022\n\012\n\005\004\000\002\003\005\018\003\017\004\t\n\012\n\005\004\000\002\003\001\018\003\017\n\017\n\012\n\005\004\000\002\003\003\018\003\017\020\021\n\n\n\002\004\001\018\004\021\000\026\001\n\n\n\003\004\001\001\018\003\021\b\027\n\012\n\004\004\001\b\000\018\004\022\002\025\003\n\012\n\005\004\001\b\000\001\018\003\022\b\014\n\011\n\004\004\001\002\000\018\003\023\004\025\n\012\n\005\004\001\002\000\005\018\003\023\004\t\n\012\n\005\004\001\002\000\001\018\003\023\n\020\n\012\n\005\004\001\002\000\003\018\003\023\023\024\n\011\n\004\004\001\002\001\018\003\024\004\022\n\012\n\005\004\001\002\001\005\018\003\024\004\t\n\012\n\005\004\001\002\001\001\018\003\024\n\017\n\012\n\005\004\001\002\001\003\018\003\024\020\021\n\n\n\002\004\002\018\004\028\000\030\001\n\n\n\003\004\002\001\018\003\028\b\028\n\011\n\004\004\002\002\000\018\003\029\002/\n\012\n\005\004\002\002\000\004\018\003\029\002\n\n\012\n\005\004\002\002\000\006\018\003\029\011!\n\012\n\005\004\002\002\000\001\018\003\029\"*\n\012\n\005\004\002\002\000\003\018\003\029-.b\006proto3"
+  let package_service_names = [
+    "oresai.services.CommentService";
+  ]
+end

@@ -98,6 +98,7 @@ module rec Oresai : sig
     end
 
     module UserService : sig
+      val package_service_name : string
       module GetUserMe : sig
         include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetUserMeResponse.t
         module Request : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type make_t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.make_t
@@ -196,6 +197,7 @@ end = struct
     end
 
     module UserService : sig
+      val package_service_name : string
       module GetUserMe : sig
         include Runtime'.Service.Rpc with type Request.t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type Response.t = GetUserMeResponse.t
         module Request : Runtime'.Spec.Message with type t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.t and type make_t = Imported'modules.Google_protobuf_empty.Google.Protobuf.Empty.make_t
@@ -360,6 +362,7 @@ end = struct
     end
 
     module UserService = struct
+      let package_service_name = "oresai.services.UserService"
       module GetUserMe = struct
         let package_name = Some "oresai.services"
         let service_name = "UserService"
@@ -391,3 +394,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "oresai/services/user.proto"
+  let file_descriptor_proto = "\n\026oresai/services/user.proto\018\015oresai.services\026\027google/protobuf/empty.proto\026\025oresai/objects/user.proto\"=\n\017GetUserMeResponse\018(\n\004user\024\001 \001(\0112\020.oresai.objects.UserR\004user\"\216\001\n\019UpdateUserMeRequest\018\023\n\004name\024\001 \001(\tH\000R\004name\136\001\001\018&\n\012display_name\024\002 \001(\tH\001R\011displayName\136\001\001\018\021\n\003bio\024\003 \001(\tH\002R\003bio\136\001\001\018\"\n\navatar_url\024\004 \001(\tH\003R\tavatarUrl\136\001\001\018\020\n\005links\024\005 \003(\tR\005linksB\007\n\005_nameB\015\n\r_display_nameB\006\n\004_bioB\r\n\011_avatar_url2\162\001\n\011UserService\018G\n\tGetUserMe\018\022.google.protobuf.Empty\026\".oresai.services.GetUserMeResponse\018J\n\012UpdateUserMe\018$.oresai.services.UpdateUserMeRequest\026\020.oresai.objects.UserB}\n\019com.oresai.servicesB\tUserProtoP\001\162\002\003OSX\170\002\015Oresai.Services\202\002\015Oresai\\Services\226\002\027Oresai\\Services\\GPBMetadata\234\002\016Oresai::ServicesJ\190\006\n\006\018\004\000\000\025\001\n\b\n\001\012\018\003\000\000\018\n\b\n\001\002\018\003\002\000\024\n\t\n\002\003\000\018\003\004\000%\n\t\n\002\003\001\018\003\005\000#\n\n\n\002\006\000\018\004\007\000\r\001\n\n\n\003\006\000\001\018\003\007\b\019\n\011\n\004\006\000\002\000\018\003\b\002C\n\012\n\005\006\000\002\000\001\018\003\b\006\015\n\012\n\005\006\000\002\000\002\018\003\b\016%\n\012\n\005\006\000\002\000\003\018\003\b0A\n\183\001\n\004\006\000\002\001\018\003\012\002F\026\169\001 Update user profile. `links` states new links: if the field is empty then the update will remove all links.\n If you don't want to update links, pass the current links.\n\n\012\n\005\006\000\002\001\001\018\003\012\006\018\n\012\n\005\006\000\002\001\002\018\003\012\019&\n\012\n\005\006\000\002\001\003\018\003\0121D\n\n\n\002\004\000\018\004\015\000\017\001\n\n\n\003\004\000\001\018\003\015\b\025\n\011\n\004\004\000\002\000\018\003\016\002\031\n\012\n\005\004\000\002\000\006\018\003\016\002\021\n\012\n\005\004\000\002\000\001\018\003\016\022\026\n\012\n\005\004\000\002\000\003\018\003\016\029\030\n\n\n\002\004\001\018\004\019\000\025\001\n\n\n\003\004\001\001\018\003\019\b\027\n\011\n\004\004\001\002\000\018\003\020\002\027\n\012\n\005\004\001\002\000\004\018\003\020\002\n\n\012\n\005\004\001\002\000\005\018\003\020\011\017\n\012\n\005\004\001\002\000\001\018\003\020\018\022\n\012\n\005\004\001\002\000\003\018\003\020\025\026\n\011\n\004\004\001\002\001\018\003\021\002#\n\012\n\005\004\001\002\001\004\018\003\021\002\n\n\012\n\005\004\001\002\001\005\018\003\021\011\017\n\012\n\005\004\001\002\001\001\018\003\021\018\030\n\012\n\005\004\001\002\001\003\018\003\021!\"\n\011\n\004\004\001\002\002\018\003\022\002\026\n\012\n\005\004\001\002\002\004\018\003\022\002\n\n\012\n\005\004\001\002\002\005\018\003\022\011\017\n\012\n\005\004\001\002\002\001\018\003\022\018\021\n\012\n\005\004\001\002\002\003\018\003\022\024\025\n\011\n\004\004\001\002\003\018\003\023\002!\n\012\n\005\004\001\002\003\004\018\003\023\002\n\n\012\n\005\004\001\002\003\005\018\003\023\011\017\n\012\n\005\004\001\002\003\001\018\003\023\018\028\n\012\n\005\004\001\002\003\003\018\003\023\031 \n$\n\004\004\001\002\004\018\003\024\002\028\"\023 NEW links; not append\n\n\012\n\005\004\001\002\004\004\018\003\024\002\n\n\012\n\005\004\001\002\004\005\018\003\024\011\017\n\012\n\005\004\001\002\004\001\018\003\024\018\023\n\012\n\005\004\001\002\004\003\018\003\024\026\027b\006proto3"
+  let package_service_names = [
+    "oresai.services.UserService";
+  ]
+end

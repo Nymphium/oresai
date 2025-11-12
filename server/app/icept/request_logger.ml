@@ -7,7 +7,7 @@ let register stream reqd k =
           Logs.Tag.(
             empty
             |> add (def "ip_addr" Eio.Net.Sockaddr.pp) stream
-            |> add (def "path" @@ fun f s -> Format.fprintf f "%s" s) target)
+            |> add (def "path" Format.pp_print_string) target)
         "receive request")
   in
   k stream reqd

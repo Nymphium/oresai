@@ -3,8 +3,7 @@ open Core
 let main ~env ~sw ~conn Config.{ port; _ } () =
   Eio.Fiber.with_binding Context.conn conn @@ fun () ->
   Logs.info (fun m -> m "Starting gRPC server on port %d" port);
-  try Result.return @@ Server.serve ~env ~sw ~port with
-  | Eio.Cancel.Cancelled _ -> Ok ()
+  Result.return @@ Server.serve ~env ~sw ~port
 ;;
 
 let shutdown = function
@@ -34,7 +33,7 @@ let () =
     Logs.Src.set_level Caqti_platform.Logging.request_log_src level';
     Logs.(set_level level')
   in
-  let signal, resolver = Eio.Promise.create () in
+  let signal', resolver = Eio.Promise.create () in
   let () =
     Stdlib.Sys.(
       set_signal sigpipe @@ Signal_ignore;
@@ -50,5 +49,5 @@ let () =
   let* ({ db_dsn; _ } as config) = Config.read () in
   let* conn = Caqti_eio_unix.connect_pool ~sw ~stdenv:(env :> Caqti_eio.stdenv) db_dsn in
   Eio.Fiber.any
-    [ main ~env ~sw ~conn config; (fun () -> Eio.Promise.await signal |> shutdown) ]
+    [ main ~env ~sw ~conn config; (fun () -> Eio.Promise.await signal' |> shutdown) ]
 ;;

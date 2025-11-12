@@ -1,10 +1,15 @@
 (include_subdirs unqualified)
 
+(executable
+ (name gen_protos)
+ (modules gen_protos))
+
 (library
  (name protos)
  (flags
   (:standard -w -50))
  (public_name oresai.protos)
+ (modules :standard \ gen_protos)
  (libraries ocaml-protoc-plugin))
 
 (rule
@@ -16,3 +21,13 @@
   buf.gen.yaml)
  (action
   (run buf generate)))
+
+(rule
+ (target protos.ml)
+ (deps
+  (:gen_protos gen_protos.exe)
+  generated)
+ (action
+  (with-stdout-to
+   %{target}
+   (run ./%{gen_protos}))))

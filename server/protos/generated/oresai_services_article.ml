@@ -34,8 +34,9 @@ module rec Oresai : sig
         title:string;
         content:string;
         tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list;
+        state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t;
       } [@@deriving eq]
-      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -54,7 +55,7 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -218,6 +219,7 @@ module rec Oresai : sig
     end
 
     module ArticleService : sig
+      val package_service_name : string
       module CreateArticle : sig
         include Runtime'.Service.Rpc with type Request.t = CreateArticleRequest.t and type Response.t = Imported'modules.Oresai_objects_article.Oresai.Objects.Article.t
         module Request : Runtime'.Spec.Message with type t = CreateArticleRequest.t and type make_t = CreateArticleRequest.make_t
@@ -284,8 +286,9 @@ end = struct
         title:string;
         content:string;
         tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list;
+        state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t;
       } [@@deriving eq]
-      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -304,7 +307,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -468,6 +471,7 @@ end = struct
     end
 
     module ArticleService : sig
+      val package_service_name : string
       module CreateArticle : sig
         include Runtime'.Service.Rpc with type Request.t = CreateArticleRequest.t and type Response.t = Imported'modules.Oresai_objects_article.Oresai.Objects.Article.t
         module Request : Runtime'.Spec.Message with type t = CreateArticleRequest.t and type make_t = CreateArticleRequest.make_t
@@ -532,8 +536,9 @@ end = struct
         title:string;
         content:string;
         tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list;
+        state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t;
       } [@@deriving eq]
-      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      val make: ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -552,7 +557,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
+      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -566,35 +571,38 @@ end = struct
         title:string;
         content:string;
         tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list;
+        state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t;
       } [@@deriving eq]
-      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> unit -> t
-      let make ?(user_id = 0L) ?(title = {||}) ?(content = {||}) ?(tags = []) () = { user_id; title; content; tags }
+      type make_t = ?user_id:int64 -> ?title:string -> ?content:string -> ?tags:Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag.t list -> ?state:Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.t -> unit -> t
+      let make ?(user_id = 0L) ?(title = {||}) ?(content = {||}) ?(tags = []) ?(state = Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.from_int_exn 0) () = { user_id; title; content; tags; state }
       let merge =
       let merge_user_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ) in
       let merge_title = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "title", "title"), string, ({||})) ) in
       let merge_content = Runtime'.Merge.merge Runtime'.Spec.( basic ((3, "content", "content"), string, ({||})) ) in
       let merge_tags = Runtime'.Merge.merge Runtime'.Spec.( repeated ((4, "tags", "tags"), (message (module Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag)), not_packed) ) in
+      let merge_state = Runtime'.Merge.merge Runtime'.Spec.( basic ((5, "state", "state"), (enum (module Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState)), (Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.from_int_exn 0)) ) in
       fun t1 t2 -> {
       	user_id = (merge_user_id t1.user_id t2.user_id);
       	title = (merge_title t1.title t2.title);
       	content = (merge_content t1.content t2.content);
       	tags = (merge_tags t1.tags t2.tags);
+      	state = (merge_state t1.state t2.state);
        }
-      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ^:: basic ((2, "title", "title"), string, ({||})) ^:: basic ((3, "content", "content"), string, ({||})) ^:: repeated ((4, "tags", "tags"), (message (module Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag)), not_packed) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ^:: basic ((2, "title", "title"), string, ({||})) ^:: basic ((3, "content", "content"), string, ({||})) ^:: repeated ((4, "tags", "tags"), (message (module Imported'modules.Oresai_objects_tag.Oresai.Objects.Tag)), not_packed) ^:: basic ((5, "state", "state"), (enum (module Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState)), (Imported'modules.Oresai_objects_article.Oresai.Objects.ArticleState.from_int_exn 0)) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer { user_id; title; content; tags } -> serialize writer user_id title content tags
+        fun writer { user_id; title; content; tags; state } -> serialize writer user_id title content tags state
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor user_id title content tags = { user_id; title; content; tags } in
+        let constructor user_id title content tags state = { user_id; title; content; tags; state } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun { user_id; title; content; tags } -> serialize user_id title content tags
+        fun { user_id; title; content; tags; state } -> serialize user_id title content tags state
       let from_json_exn =
-        let constructor user_id title content tags = { user_id; title; content; tags } in
+        let constructor user_id title content tags state = { user_id; title; content; tags; state } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
@@ -909,6 +917,7 @@ end = struct
     end
 
     module ArticleService = struct
+      let package_service_name = "oresai.services.ArticleService"
       module CreateArticle = struct
         let package_name = Some "oresai.services"
         let service_name = "ArticleService"
@@ -979,3 +988,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "oresai/services/article.proto"
+  let file_descriptor_proto = "\n\029oresai/services/article.proto\018\015oresai.services\026\027google/protobuf/empty.proto\026\028oresai/objects/article.proto\026\024oresai/objects/tag.proto\"\188\001\n\020CreateArticleRequest\018\023\n\007user_id\024\001 \001(\003R\006userId\018\020\n\005title\024\002 \001(\tR\005title\018\024\n\007content\024\003 \001(\tR\007content\018'\n\004tags\024\004 \003(\0112\019.oresai.objects.TagR\004tags\0182\n\005state\024\005 \001(\0142\028.oresai.objects.ArticleStateR\005state\"2\n\017GetArticleRequest\018\029\n\narticle_id\024\001 \001(\003R\tarticleId\"o\n\020UpdateArticleRequest\018\020\n\005title\024\001 \001(\tR\005title\018\024\n\007content\024\002 \001(\tR\007content\018'\n\004tags\024\003 \003(\0112\019.oresai.objects.TagR\004tags\"5\n\020DeleteArticleRequest\018\029\n\narticle_id\024\001 \001(\003R\tarticleId\"J\n\019ListArticlesRequest\018\027\n\tpage_size\024\001 \001(\005R\bpageSize\018\022\n\006offset\024\003 \001(\005R\006offset\"s\n\020ListArticlesResponse\0183\n\barticles\024\001 \003(\0112\023.oresai.objects.ArticleR\barticles\018&\n\015next_page_token\024\002 \001(\tR\rnextPageToken2\170\003\n\014ArticleService\018O\n\rCreateArticle\018%.oresai.services.CreateArticleRequest\026\023.oresai.objects.Article\018I\n\nGetArticle\018\".oresai.services.GetArticleRequest\026\023.oresai.objects.Article\018O\n\rUpdateArticle\018%.oresai.services.UpdateArticleRequest\026\023.oresai.objects.Article\018N\n\rDeleteArticle\018%.oresai.services.DeleteArticleRequest\026\022.google.protobuf.Empty\018[\n\012ListArticles\018$.oresai.services.ListArticlesRequest\026%.oresai.services.ListArticlesResponseB\128\001\n\019com.oresai.servicesB\012ArticleProtoP\001\162\002\003OSX\170\002\015Oresai.Services\202\002\015Oresai\\Services\226\002\027Oresai\\Services\\GPBMetadata\234\002\016Oresai::ServicesJ\164\n\n\006\018\004\000\000-\001\n\b\n\001\012\018\003\000\000\018\n\b\n\001\002\018\003\002\000\024\n\t\n\002\003\000\018\003\004\000%\n\t\n\002\003\001\018\003\005\000&\n\t\n\002\003\002\018\003\006\000\"\n\n\n\002\006\000\018\004\b\000\014\001\n\n\n\003\006\000\001\018\003\b\b\022\n\011\n\004\006\000\002\000\018\003\t\002K\n\012\n\005\006\000\002\000\001\018\003\t\006\019\n\012\n\005\006\000\002\000\002\018\003\t\020(\n\012\n\005\006\000\002\000\003\018\003\t3I\n\011\n\004\006\000\002\001\018\003\n\002E\n\012\n\005\006\000\002\001\001\018\003\n\006\016\n\012\n\005\006\000\002\001\002\018\003\n\017\"\n\012\n\005\006\000\002\001\003\018\003\n-C\n\011\n\004\006\000\002\002\018\003\011\002K\n\012\n\005\006\000\002\002\001\018\003\011\006\019\n\012\n\005\006\000\002\002\002\018\003\011\020(\n\012\n\005\006\000\002\002\003\018\003\0113I\n\011\n\004\006\000\002\003\018\003\012\002J\n\012\n\005\006\000\002\003\001\018\003\012\006\019\n\012\n\005\006\000\002\003\002\018\003\012\020(\n\012\n\005\006\000\002\003\003\018\003\0123H\n\011\n\004\006\000\002\004\018\003\r\002G\n\012\n\005\006\000\002\004\001\018\003\r\006\018\n\012\n\005\006\000\002\004\002\018\003\r\019&\n\012\n\005\006\000\002\004\003\018\003\r1E\n\n\n\002\004\000\018\004\016\000\022\001\n\n\n\003\004\000\001\018\003\016\b\028\n\011\n\004\004\000\002\000\018\003\017\002\020\n\012\n\005\004\000\002\000\005\018\003\017\002\007\n\012\n\005\004\000\002\000\001\018\003\017\b\015\n\012\n\005\004\000\002\000\003\018\003\017\018\019\n\011\n\004\004\000\002\001\018\003\018\002\019\n\012\n\005\004\000\002\001\005\018\003\018\002\b\n\012\n\005\004\000\002\001\001\018\003\018\t\014\n\012\n\005\004\000\002\001\003\018\003\018\017\018\n\011\n\004\004\000\002\002\018\003\019\002\021\n\012\n\005\004\000\002\002\005\018\003\019\002\b\n\012\n\005\004\000\002\002\001\018\003\019\t\016\n\012\n\005\004\000\002\002\003\018\003\019\019\020\n\011\n\004\004\000\002\003\018\003\020\002'\n\012\n\005\004\000\002\003\004\018\003\020\002\n\n\012\n\005\004\000\002\003\006\018\003\020\011\029\n\012\n\005\004\000\002\003\001\018\003\020\030\"\n\012\n\005\004\000\002\003\003\018\003\020%&\n\011\n\004\004\000\002\004\018\003\021\002(\n\012\n\005\004\000\002\004\006\018\003\021\002\029\n\012\n\005\004\000\002\004\001\018\003\021\030#\n\012\n\005\004\000\002\004\003\018\003\021&'\n\n\n\002\004\001\018\004\024\000\026\001\n\n\n\003\004\001\001\018\003\024\b\025\n\011\n\004\004\001\002\000\018\003\025\002\023\n\012\n\005\004\001\002\000\005\018\003\025\002\007\n\012\n\005\004\001\002\000\001\018\003\025\b\018\n\012\n\005\004\001\002\000\003\018\003\025\021\022\n\n\n\002\004\002\018\004\028\000 \001\n\n\n\003\004\002\001\018\003\028\b\028\n\011\n\004\004\002\002\000\018\003\029\002\019\n\012\n\005\004\002\002\000\005\018\003\029\002\b\n\012\n\005\004\002\002\000\001\018\003\029\t\014\n\012\n\005\004\002\002\000\003\018\003\029\017\018\n\011\n\004\004\002\002\001\018\003\030\002\021\n\012\n\005\004\002\002\001\005\018\003\030\002\b\n\012\n\005\004\002\002\001\001\018\003\030\t\016\n\012\n\005\004\002\002\001\003\018\003\030\019\020\n\011\n\004\004\002\002\002\018\003\031\002'\n\012\n\005\004\002\002\002\004\018\003\031\002\n\n\012\n\005\004\002\002\002\006\018\003\031\011\029\n\012\n\005\004\002\002\002\001\018\003\031\030\"\n\012\n\005\004\002\002\002\003\018\003\031%&\n\n\n\002\004\003\018\004\"\000$\001\n\n\n\003\004\003\001\018\003\"\b\028\n\011\n\004\004\003\002\000\018\003#\002\023\n\012\n\005\004\003\002\000\005\018\003#\002\007\n\012\n\005\004\003\002\000\001\018\003#\b\018\n\012\n\005\004\003\002\000\003\018\003#\021\022\n\n\n\002\004\004\018\004&\000)\001\n\n\n\003\004\004\001\018\003&\b\027\n\011\n\004\004\004\002\000\018\003'\002\022\n\012\n\005\004\004\002\000\005\018\003'\002\007\n\012\n\005\004\004\002\000\001\018\003'\b\017\n\012\n\005\004\004\002\000\003\018\003'\020\021\n\011\n\004\004\004\002\001\018\003(\002\019\n\012\n\005\004\004\002\001\005\018\003(\002\007\n\012\n\005\004\004\002\001\001\018\003(\b\014\n\012\n\005\004\004\002\001\003\018\003(\017\018\n\n\n\002\004\005\018\004*\000-\001\n\n\n\003\004\005\001\018\003*\b\028\n\011\n\004\004\005\002\000\018\003+\002/\n\012\n\005\004\005\002\000\004\018\003+\002\n\n\012\n\005\004\005\002\000\006\018\003+\011!\n\012\n\005\004\005\002\000\001\018\003+\"*\n\012\n\005\004\005\002\000\003\018\003+-.\n\011\n\004\004\005\002\001\018\003,\002\029\n\012\n\005\004\005\002\001\005\018\003,\002\b\n\012\n\005\004\005\002\001\001\018\003,\t\024\n\012\n\005\004\005\002\001\003\018\003,\027\028b\006proto3"
+  let package_service_names = [
+    "oresai.services.ArticleService";
+  ]
+end

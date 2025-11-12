@@ -32,7 +32,7 @@ module rec Oresai : sig
         email:string;
         display_name:string;
         bio:string;
-        avatar_url:string;
+        avatar_url:string option;
         links:string list;
       } [@@deriving eq]
       val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
@@ -63,8 +63,11 @@ module rec Oresai : sig
     end
 
     and RegisterResponse : sig
-      type t = (int64) [@@deriving eq]
-      val make: ?user_id:int64 -> unit -> t
+      type t = {
+        user_id:int64;
+        account_id:int64;
+      } [@@deriving eq]
+      val make: ?user_id:int64 -> ?account_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -83,7 +86,7 @@ module rec Oresai : sig
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> unit -> t
+      type make_t = ?user_id:int64 -> ?account_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -125,12 +128,6 @@ module rec Oresai : sig
 
     and LoginResponse : sig
       type t = (string) [@@deriving eq]
-      (**
-{%html:
-<p>JWT token</p>
-%}
-      *)
-
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -159,6 +156,7 @@ module rec Oresai : sig
     end
 
     module AuthService : sig
+      val package_service_name : string
       module Register : sig
         include Runtime'.Service.Rpc with type Request.t = RegisterRequest.t and type Response.t = RegisterResponse.t
         module Request : Runtime'.Spec.Message with type t = RegisterRequest.t and type make_t = RegisterRequest.make_t
@@ -193,7 +191,7 @@ end = struct
         email:string;
         display_name:string;
         bio:string;
-        avatar_url:string;
+        avatar_url:string option;
         links:string list;
       } [@@deriving eq]
       val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
@@ -224,8 +222,11 @@ end = struct
     end
 
     and RegisterResponse : sig
-      type t = (int64) [@@deriving eq]
-      val make: ?user_id:int64 -> unit -> t
+      type t = {
+        user_id:int64;
+        account_id:int64;
+      } [@@deriving eq]
+      val make: ?user_id:int64 -> ?account_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -244,7 +245,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> unit -> t
+      type make_t = ?user_id:int64 -> ?account_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -286,12 +287,6 @@ end = struct
 
     and LoginResponse : sig
       type t = (string) [@@deriving eq]
-      (**
-{%html:
-<p>JWT token</p>
-%}
-      *)
-
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -320,6 +315,7 @@ end = struct
     end
 
     module AuthService : sig
+      val package_service_name : string
       module Register : sig
         include Runtime'.Service.Rpc with type Request.t = RegisterRequest.t and type Response.t = RegisterResponse.t
         module Request : Runtime'.Spec.Message with type t = RegisterRequest.t and type make_t = RegisterRequest.make_t
@@ -352,7 +348,7 @@ end = struct
         email:string;
         display_name:string;
         bio:string;
-        avatar_url:string;
+        avatar_url:string option;
         links:string list;
       } [@@deriving eq]
       val make: ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
@@ -389,18 +385,18 @@ end = struct
         email:string;
         display_name:string;
         bio:string;
-        avatar_url:string;
+        avatar_url:string option;
         links:string list;
       } [@@deriving eq]
       type make_t = ?name:string -> ?password:string -> ?email:string -> ?display_name:string -> ?bio:string -> ?avatar_url:string -> ?links:string list -> unit -> t
-      let make ?(name = {||}) ?(password = {||}) ?(email = {||}) ?(display_name = {||}) ?(bio = {||}) ?(avatar_url = {||}) ?(links = []) () = { name; password; email; display_name; bio; avatar_url; links }
+      let make ?(name = {||}) ?(password = {||}) ?(email = {||}) ?(display_name = {||}) ?(bio = {||}) ?avatar_url ?(links = []) () = { name; password; email; display_name; bio; avatar_url; links }
       let merge =
       let merge_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ) in
       let merge_password = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "password", "password"), string, ({||})) ) in
       let merge_email = Runtime'.Merge.merge Runtime'.Spec.( basic ((3, "email", "email"), string, ({||})) ) in
       let merge_display_name = Runtime'.Merge.merge Runtime'.Spec.( basic ((4, "display_name", "displayName"), string, ({||})) ) in
       let merge_bio = Runtime'.Merge.merge Runtime'.Spec.( basic ((5, "bio", "bio"), string, ({||})) ) in
-      let merge_avatar_url = Runtime'.Merge.merge Runtime'.Spec.( basic ((6, "avatar_url", "avatarUrl"), string, ({||})) ) in
+      let merge_avatar_url = Runtime'.Merge.merge Runtime'.Spec.( basic_opt ((6, "avatar_url", "avatarUrl"), string) ) in
       let merge_links = Runtime'.Merge.merge Runtime'.Spec.( repeated ((7, "links", "links"), string, not_packed) ) in
       fun t1 t2 -> {
       	name = (merge_name t1.name t2.name);
@@ -411,7 +407,7 @@ end = struct
       	avatar_url = (merge_avatar_url t1.avatar_url t2.avatar_url);
       	links = (merge_links t1.links t2.links);
        }
-      let spec () = Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: basic ((3, "email", "email"), string, ({||})) ^:: basic ((4, "display_name", "displayName"), string, ({||})) ^:: basic ((5, "bio", "bio"), string, ({||})) ^:: basic ((6, "avatar_url", "avatarUrl"), string, ({||})) ^:: repeated ((7, "links", "links"), string, not_packed) ^:: nil )
+      let spec () = Runtime'.Spec.( basic ((1, "name", "name"), string, ({||})) ^:: basic ((2, "password", "password"), string, ({||})) ^:: basic ((3, "email", "email"), string, ({||})) ^:: basic ((4, "display_name", "displayName"), string, ({||})) ^:: basic ((5, "bio", "bio"), string, ({||})) ^:: basic_opt ((6, "avatar_url", "avatarUrl"), string) ^:: repeated ((7, "links", "links"), string, not_packed) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
         fun writer { name; password; email; display_name; bio; avatar_url; links } -> serialize writer name password email display_name bio avatar_url links
@@ -431,8 +427,11 @@ end = struct
     end
 
     and RegisterResponse : sig
-      type t = (int64) [@@deriving eq]
-      val make: ?user_id:int64 -> unit -> t
+      type t = {
+        user_id:int64;
+        account_id:int64;
+      } [@@deriving eq]
+      val make: ?user_id:int64 -> ?account_id:int64 -> unit -> t
       (** Helper function to generate a message using default values *)
 
       val to_proto: t -> Runtime'.Writer.t
@@ -451,7 +450,7 @@ end = struct
       (** Fully qualified protobuf name of this message *)
 
       (**/**)
-      type make_t = ?user_id:int64 -> unit -> t
+      type make_t = ?user_id:int64 -> ?account_id:int64 -> unit -> t
       val merge: t -> t -> t
       val to_proto': Runtime'.Writer.t -> t -> unit
       val from_proto_exn: Runtime'.Reader.t -> t
@@ -460,27 +459,34 @@ end = struct
     end = struct
       module This'_ = RegisterResponse
       let name () = ".oresai.services.RegisterResponse"
-      type t = (int64) [@@deriving eq]
-      type make_t = ?user_id:int64 -> unit -> t
-      let make ?(user_id = 0L) () = (user_id)
+      type t = {
+        user_id:int64;
+        account_id:int64;
+      } [@@deriving eq]
+      type make_t = ?user_id:int64 -> ?account_id:int64 -> unit -> t
+      let make ?(user_id = 0L) ?(account_id = 0L) () = { user_id; account_id }
       let merge =
       let merge_user_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ) in
-      fun (t1_user_id) (t2_user_id) -> merge_user_id t1_user_id t2_user_id
-      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ^:: nil )
+      let merge_account_id = Runtime'.Merge.merge Runtime'.Spec.( basic ((2, "account_id", "accountId"), int64, (0L)) ) in
+      fun t1 t2 -> {
+      	user_id = (merge_user_id t1.user_id t2.user_id);
+      	account_id = (merge_account_id t1.account_id t2.account_id);
+       }
+      let spec () = Runtime'.Spec.( basic ((1, "user_id", "userId"), int64, (0L)) ^:: basic ((2, "account_id", "accountId"), int64, (0L)) ^:: nil )
       let to_proto' =
         let serialize = Runtime'.apply_lazy (fun () -> Runtime'.Serialize.serialize (spec ())) in
-        fun writer (user_id) -> serialize writer user_id
+        fun writer { user_id; account_id } -> serialize writer user_id account_id
 
       let to_proto t = let writer = Runtime'.Writer.init () in to_proto' writer t; writer
       let from_proto_exn =
-        let constructor user_id = (user_id) in
+        let constructor user_id account_id = { user_id; account_id } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize.deserialize (spec ()) constructor)
       let from_proto writer = Runtime'.Result.catch (fun () -> from_proto_exn writer)
       let to_json options =
         let serialize = Runtime'.Serialize_json.serialize ~message_name:(name ()) (spec ()) options in
-        fun (user_id) -> serialize user_id
+        fun { user_id; account_id } -> serialize user_id account_id
       let from_json_exn =
-        let constructor user_id = (user_id) in
+        let constructor user_id account_id = { user_id; account_id } in
         Runtime'.apply_lazy (fun () -> Runtime'.Deserialize_json.deserialize ~message_name:(name ()) (spec ()) constructor)
       let from_json json = Runtime'.Result.catch (fun () -> from_json_exn json)
     end
@@ -552,12 +558,6 @@ end = struct
 
     and LoginResponse : sig
       type t = (string) [@@deriving eq]
-      (**
-{%html:
-<p>JWT token</p>
-%}
-      *)
-
       val make: ?access_token:string -> unit -> t
       (** Helper function to generate a message using default values *)
 
@@ -612,6 +612,7 @@ end = struct
     end
 
     module AuthService = struct
+      let package_service_name = "oresai.services.AuthService"
       module Register = struct
         let package_name = Some "oresai.services"
         let service_name = "AuthService"
@@ -643,3 +644,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "oresai/services/auth.proto"
+  let file_descriptor_proto = "\n\026oresai/services/auth.proto\018\015oresai.services\"\213\001\n\015RegisterRequest\018\018\n\004name\024\001 \001(\tR\004name\018\026\n\bpassword\024\002 \001(\tR\bpassword\018\020\n\005email\024\003 \001(\tR\005email\018!\n\012display_name\024\004 \001(\tR\011displayName\018\016\n\003bio\024\005 \001(\tR\003bio\018\"\n\navatar_url\024\006 \001(\tH\000R\tavatarUrl\136\001\001\018\020\n\005links\024\007 \003(\tR\005linksB\r\n\011_avatar_url\"J\n\016RegisterResponse\018\023\n\007user_id\024\001 \001(\003R\006userId\018\029\n\naccount_id\024\002 \001(\003R\taccountId\"@\n\012LoginRequest\018\020\n\005email\024\001 \001(\tR\005email\018\026\n\bpassword\024\002 \001(\tR\bpassword\"2\n\rLoginResponse\018!\n\012access_token\024\001 \001(\tR\011accessToken2\166\001\n\011AuthService\018O\n\bRegister\018 .oresai.services.RegisterRequest\026!.oresai.services.RegisterResponse\018F\n\005Login\018\029.oresai.services.LoginRequest\026\030.oresai.services.LoginResponseB}\n\019com.oresai.servicesB\tAuthProtoP\001\162\002\003OSX\170\002\015Oresai.Services\202\002\015Oresai\\Services\226\002\027Oresai\\Services\\GPBMetadata\234\002\016Oresai::ServicesJ\178\007\n\006\018\004\000\000\031\001\n\b\n\001\012\018\003\000\000\018\n\b\n\001\002\018\003\002\000\024\n\n\n\002\006\000\018\004\004\000\007\001\n\n\n\003\006\000\001\018\003\004\b\019\n\011\n\004\006\000\002\000\018\003\005\002;\n\012\n\005\006\000\002\000\001\018\003\005\006\014\n\012\n\005\006\000\002\000\002\018\003\005\015\030\n\012\n\005\006\000\002\000\003\018\003\005)9\n\011\n\004\006\000\002\001\018\003\006\0022\n\012\n\005\006\000\002\001\001\018\003\006\006\011\n\012\n\005\006\000\002\001\002\018\003\006\012\024\n\012\n\005\006\000\002\001\003\018\003\006#0\n\n\n\002\004\000\018\004\t\000\017\001\n\n\n\003\004\000\001\018\003\t\b\023\n\011\n\004\004\000\002\000\018\003\n\002\018\n\012\n\005\004\000\002\000\005\018\003\n\002\b\n\012\n\005\004\000\002\000\001\018\003\n\t\r\n\012\n\005\004\000\002\000\003\018\003\n\016\017\n\011\n\004\004\000\002\001\018\003\011\002\022\n\012\n\005\004\000\002\001\005\018\003\011\002\b\n\012\n\005\004\000\002\001\001\018\003\011\t\017\n\012\n\005\004\000\002\001\003\018\003\011\020\021\n\011\n\004\004\000\002\002\018\003\012\002\019\n\012\n\005\004\000\002\002\005\018\003\012\002\b\n\012\n\005\004\000\002\002\001\018\003\012\t\014\n\012\n\005\004\000\002\002\003\018\003\012\017\018\n\011\n\004\004\000\002\003\018\003\r\002\026\n\012\n\005\004\000\002\003\005\018\003\r\002\b\n\012\n\005\004\000\002\003\001\018\003\r\t\021\n\012\n\005\004\000\002\003\003\018\003\r\024\025\n\011\n\004\004\000\002\004\018\003\014\002\017\n\012\n\005\004\000\002\004\005\018\003\014\002\b\n\012\n\005\004\000\002\004\001\018\003\014\t\012\n\012\n\005\004\000\002\004\003\018\003\014\015\016\n\011\n\004\004\000\002\005\018\003\015\002!\n\012\n\005\004\000\002\005\004\018\003\015\002\n\n\012\n\005\004\000\002\005\005\018\003\015\011\017\n\012\n\005\004\000\002\005\001\018\003\015\018\028\n\012\n\005\004\000\002\005\003\018\003\015\031 \n\011\n\004\004\000\002\006\018\003\016\002\028\n\012\n\005\004\000\002\006\004\018\003\016\002\n\n\012\n\005\004\000\002\006\005\018\003\016\011\017\n\012\n\005\004\000\002\006\001\018\003\016\018\023\n\012\n\005\004\000\002\006\003\018\003\016\026\027\n\n\n\002\004\001\018\004\019\000\022\001\n\n\n\003\004\001\001\018\003\019\b\024\n\011\n\004\004\001\002\000\018\003\020\002\020\n\012\n\005\004\001\002\000\005\018\003\020\002\007\n\012\n\005\004\001\002\000\001\018\003\020\b\015\n\012\n\005\004\001\002\000\003\018\003\020\018\019\n\011\n\004\004\001\002\001\018\003\021\002\023\n\012\n\005\004\001\002\001\005\018\003\021\002\007\n\012\n\005\004\001\002\001\001\018\003\021\b\018\n\012\n\005\004\001\002\001\003\018\003\021\021\022\n\n\n\002\004\002\018\004\024\000\027\001\n\n\n\003\004\002\001\018\003\024\b\020\n\011\n\004\004\002\002\000\018\003\025\002\019\n\012\n\005\004\002\002\000\005\018\003\025\002\b\n\012\n\005\004\002\002\000\001\018\003\025\t\014\n\012\n\005\004\002\002\000\003\018\003\025\017\018\n\011\n\004\004\002\002\001\018\003\026\002\022\n\012\n\005\004\002\002\001\005\018\003\026\002\b\n\012\n\005\004\002\002\001\001\018\003\026\t\017\n\012\n\005\004\002\002\001\003\018\003\026\020\021\n\n\n\002\004\003\018\004\029\000\031\001\n\n\n\003\004\003\001\018\003\029\b\021\n\011\n\004\004\003\002\000\018\003\030\002\026\n\012\n\005\004\003\002\000\005\018\003\030\002\b\n\012\n\005\004\003\002\000\001\018\003\030\t\021\n\012\n\005\004\003\002\000\003\018\003\030\024\025b\006proto3"
+  let package_service_names = [
+    "oresai.services.AuthService";
+  ]
+end

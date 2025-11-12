@@ -8,7 +8,7 @@ inputs:
     branch: master
     paths:
       - grpc/health/v1
-      # - grpc/reflection/v1
+      - grpc/reflection/v1
 
 managed:
   enabled: true

@@ -1,14 +1,16 @@
 let dbdsn_reader =
+  let make_db_dsn host port database =
+    Uri.make
+      ~scheme:"postgresql"
+      ~host
+      ~port
+      ~path:("/" ^ database)
+      ~query:[ "sslmode", [ "disable" ] ]
+      ()
+  in
   Oenv.(
     Product.(
-      v (fun host port database ->
-        Uri.make
-          ~scheme:"postgresql"
-          ~host
-          ~port
-          ~path:("/" ^ database)
-          ~query:[ "sslmode", [ "disable" ] ]
-          ())
+      v make_db_dsn
       +: string "PGHOST" ~secret:false
       +: int "PGPORT" ~secret:false
       +: string "PGDATABASE" ~secret:false

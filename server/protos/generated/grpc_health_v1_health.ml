@@ -174,6 +174,7 @@ module rec Grpc : sig
       end
 
       module Health : sig
+        val package_service_name : string
         module Check : sig
           include Runtime'.Service.Rpc with type Request.t = HealthCheckRequest.t and type Response.t = HealthCheckResponse.t
           module Request : Runtime'.Spec.Message with type t = HealthCheckRequest.t and type make_t = HealthCheckRequest.make_t
@@ -362,6 +363,7 @@ end = struct
       end
 
       module Health : sig
+        val package_service_name : string
         module Check : sig
           include Runtime'.Service.Rpc with type Request.t = HealthCheckRequest.t and type Response.t = HealthCheckResponse.t
           module Request : Runtime'.Spec.Message with type t = HealthCheckRequest.t and type make_t = HealthCheckRequest.make_t
@@ -548,6 +550,7 @@ end = struct
       end
 
       module Health : sig
+        val package_service_name : string
         module Check : sig
           include Runtime'.Service.Rpc with type Request.t = HealthCheckRequest.t and type Response.t = HealthCheckResponse.t
           module Request : Runtime'.Spec.Message with type t = HealthCheckRequest.t and type make_t = HealthCheckRequest.make_t
@@ -900,6 +903,7 @@ end = struct
       end
 
       module Health = struct
+        let package_service_name = "grpc.health.v1.Health"
         module Check = struct
           let package_name = Some "grpc.health.v1"
           let service_name = "Health"
@@ -945,3 +949,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "grpc/health/v1/health.proto"
+  let file_descriptor_proto = "\n\027grpc/health/v1/health.proto\018\014grpc.health.v1\".\n\018HealthCheckRequest\018\024\n\007service\024\001 \001(\tR\007service\"\177\001\n\019HealthCheckResponse\018I\n\006status\024\001 \001(\01421.grpc.health.v1.HealthCheckResponse.ServingStatusR\006status\"O\n\rServingStatus\018\011\n\007UNKNOWN\016\000\018\011\n\007SERVING\016\001\018\015\n\011NOT_SERVING\016\002\018\019\n\015SERVICE_UNKNOWN\016\003\"\019\n\017HealthListRequest\"\196\001\n\018HealthListResponse\018L\n\bstatuses\024\001 \003(\01120.grpc.health.v1.HealthListResponse.StatusesEntryR\bstatuses\026`\n\rStatusesEntry\018\016\n\003key\024\001 \001(\tR\003key\0189\n\005value\024\002 \001(\0112#.grpc.health.v1.HealthCheckResponseR\005value:\0028\0012\253\001\n\006Health\018P\n\005Check\018\".grpc.health.v1.HealthCheckRequest\026#.grpc.health.v1.HealthCheckResponse\018M\n\004List\018!.grpc.health.v1.HealthListRequest\026\".grpc.health.v1.HealthListResponse\018R\n\005Watch\018\".grpc.health.v1.HealthCheckRequest\026#.grpc.health.v1.HealthCheckResponse0\001B\169\001\n\018com.grpc.health.v1B\011HealthProtoP\001Z,google.golang.org/grpc/health/grpc_health_v1\162\002\003GHX\170\002\014Grpc.Health.V1\202\002\014Grpc\\Health\\V1\226\002\026Grpc\\Health\\V1\\GPBMetadata\234\002\016Grpc::Health::V1J\243\026\n\006\018\004\017\000[\001\n\198\005\n\001\012\018\003\017\000\0182\183\004 Copyright 2015 The gRPC Authors\n\n Licensed under the Apache License, Version 2.0 (the \"License\");\n you may not use this file except in compliance with the License.\n You may obtain a copy of the License at\n\n     http://www.apache.org/licenses/LICENSE-2.0\n\n Unless required by applicable law or agreed to in writing, software\n distributed under the License is distributed on an \"AS IS\" BASIS,\n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n See the License for the specific language governing permissions and\n limitations under the License.\n2\129\001 The canonical version of this proto can be found at\n https://github.com/grpc/grpc-proto/blob/master/grpc/health/v1/health.proto\n\n\b\n\001\002\018\003\019\000\023\n\b\n\001\b\018\003\021\000+\n\t\n\002\b%\018\003\021\000+\n\b\n\001\b\018\003\022\000C\n\t\n\002\b\011\018\003\022\000C\n\b\n\001\b\018\003\023\000\"\n\t\n\002\b\n\018\003\023\000\"\n\b\n\001\b\018\003\024\000,\n\t\n\002\b\b\018\003\024\000,\n\n\n\002\004\000\018\004\028\000\030\001\n\n\n\003\004\000\001\018\003\028\b\026\n\011\n\004\004\000\002\000\018\003\029\002\021\n\012\n\005\004\000\002\000\005\018\003\029\002\b\n\012\n\005\004\000\002\000\001\018\003\029\t\016\n\012\n\005\004\000\002\000\003\018\003\029\019\020\n\n\n\002\004\001\018\004 \000(\001\n\n\n\003\004\001\001\018\003 \b\027\n\012\n\004\004\001\004\000\018\004!\002&\003\n\012\n\005\004\001\004\000\001\018\003!\007\020\n\r\n\006\004\001\004\000\002\000\018\003\"\004\016\n\014\n\007\004\001\004\000\002\000\001\018\003\"\004\011\n\014\n\007\004\001\004\000\002\000\002\018\003\"\014\015\n\r\n\006\004\001\004\000\002\001\018\003#\004\016\n\014\n\007\004\001\004\000\002\001\001\018\003#\004\011\n\014\n\007\004\001\004\000\002\001\002\018\003#\014\015\n\r\n\006\004\001\004\000\002\002\018\003$\004\020\n\014\n\007\004\001\004\000\002\002\001\018\003$\004\015\n\014\n\007\004\001\004\000\002\002\002\018\003$\018\019\n/\n\006\004\001\004\000\002\003\018\003%\004\024\"  Used only by the Watch method.\n\n\014\n\007\004\001\004\000\002\003\001\018\003%\004\019\n\014\n\007\004\001\004\000\002\003\002\018\003%\022\023\n\011\n\004\004\001\002\000\018\003'\002\027\n\012\n\005\004\001\002\000\006\018\003'\002\015\n\012\n\005\004\001\002\000\001\018\003'\016\022\n\012\n\005\004\001\002\000\003\018\003'\025\026\n\t\n\002\004\002\018\003*\000\028\n\n\n\003\004\002\001\018\003*\b\025\n\n\n\002\004\003\018\004,\000/\001\n\n\n\003\004\003\001\018\003,\b\026\nN\n\004\004\003\002\000\018\003.\0020\026A statuses contains all the services and their respective status.\n\n\012\n\005\004\003\002\000\006\018\003.\002\"\n\012\n\005\004\003\002\000\001\018\003.#+\n\012\n\005\004\003\002\000\003\018\003../\n\194\001\n\002\006\000\018\0044\000[\001\026\181\001 Health is gRPC's mechanism for checking whether a server is able to handle\n RPCs. Its semantics are documented in\n https://github.com/grpc/grpc/blob/master/doc/health-checking.md.\n\n\n\n\003\006\000\001\018\0034\b\014\n\254\002\n\004\006\000\002\000\018\003<\002>\026\240\002 Check gets the health of the specified service. If the requested service\n is unknown, the call will fail with status NOT_FOUND. If the caller does\n not specify a service name, the server should respond with its overall\n health status.\n\n Clients should set a deadline when calling Check, and can declare the\n server unhealthy if they do not receive a timely response.\n\n\012\n\005\006\000\002\000\001\018\003<\006\011\n\012\n\005\006\000\002\000\002\018\003<\012\030\n\012\n\005\006\000\002\000\003\018\003<)<\n\193\003\n\004\006\000\002\001\018\003I\002;\026\179\003 List provides a non-atomic snapshot of the health of all the available\n services.\n\n The server may respond with a RESOURCE_EXHAUSTED error if too many services\n exist.\n\n Clients should set a deadline when calling List, and can declare the server\n unhealthy if they do not receive a timely response.\n\n Clients should keep in mind that the list of health services exposed by an\n application can change over the lifetime of the process.\n\n\012\n\005\006\000\002\001\001\018\003I\006\n\n\012\n\005\006\000\002\001\002\018\003I\011\028\n\012\n\005\006\000\002\001\003\018\003I'9\n\222\006\n\004\006\000\002\002\018\003Z\002E\026\208\006 Performs a watch for the serving status of the requested service.\n The server will immediately send back a message indicating the current\n serving status.  It will then subsequently send a new message whenever\n the service's serving status changes.\n\n If the requested service is unknown when the call is received, the\n server will send a message setting the serving status to\n SERVICE_UNKNOWN but will *not* terminate the call.  If at some\n future point, the serving status of the service becomes known, the\n server will send a new message with the service's serving status.\n\n If the call terminates with status UNIMPLEMENTED, then clients\n should assume this method is not supported and should not retry the\n call.  If the call terminates with any other status (including OK),\n clients should retry the call with appropriate exponential backoff.\n\n\012\n\005\006\000\002\002\001\018\003Z\006\011\n\012\n\005\006\000\002\002\002\018\003Z\012\030\n\012\n\005\006\000\002\002\006\018\003Z)/\n\012\n\005\006\000\002\002\003\018\003Z0Cb\006proto3"
+  let package_service_names = [
+    "grpc.health.v1.Health";
+  ]
+end

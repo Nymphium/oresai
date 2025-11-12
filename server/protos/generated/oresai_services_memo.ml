@@ -210,6 +210,7 @@ module rec Oresai : sig
     end
 
     module MemoService : sig
+      val package_service_name : string
       module Create : sig
         include Runtime'.Service.Rpc with type Request.t = CreateMemoRequest.t and type Response.t = Imported'modules.Oresai_objects_memo.Oresai.Objects.Memo.t
         module Request : Runtime'.Spec.Message with type t = CreateMemoRequest.t and type make_t = CreateMemoRequest.make_t
@@ -452,6 +453,7 @@ end = struct
     end
 
     module MemoService : sig
+      val package_service_name : string
       module Create : sig
         include Runtime'.Service.Rpc with type Request.t = CreateMemoRequest.t and type Response.t = Imported'modules.Oresai_objects_memo.Oresai.Objects.Memo.t
         module Request : Runtime'.Spec.Message with type t = CreateMemoRequest.t and type make_t = CreateMemoRequest.make_t
@@ -865,6 +867,7 @@ end = struct
     end
 
     module MemoService = struct
+      let package_service_name = "oresai.services.MemoService"
       module Create = struct
         let package_name = Some "oresai.services"
         let service_name = "MemoService"
@@ -935,3 +938,10 @@ end = struct
   end
 end
 
+module Metainfo : Runtime'.Spec.Metainfo = struct
+  let file_name = "oresai/services/memo.proto"
+  let file_descriptor_proto = "\n\026oresai/services/memo.proto\018\015oresai.services\026\027google/protobuf/empty.proto\026\025oresai/objects/memo.proto\026\024oresai/objects/tag.proto\"o\n\017CreateMemoRequest\018\023\n\007user_id\024\002 \001(\003R\006userId\018\024\n\007content\024\003 \001(\tR\007content\018'\n\004tags\024\004 \003(\0112\019.oresai.objects.TagR\004tags\" \n\014GetMemoRequest\018\014\n\002id\024\001 \001(\003R\002id\"I\n\015GetMemoResponse\018-\n\004memo\024\001 \001(\0112\020.oresai.objects.MemoH\000R\004memo\136\001\001B\007\n\005_memo\">\n\016ListMemoResponse\018*\n\005memos\024\001 \003(\0112\020.oresai.objects.MemoR\005memos\"g\n\017UpdateMemoRequest\018\029\n\007content\024\003 \001(\tH\000R\007content\136\001\001\018'\n\004tags\024\004 \003(\0112\019.oresai.objects.TagR\004tagsB\n\n\b_content\"#\n\017DeleteMemoRequest\018\014\n\002id\024\001 \001(\003R\002id2\232\002\n\011MemoService\018B\n\006Create\018\".oresai.services.CreateMemoRequest\026\020.oresai.objects.Memo\018H\n\003Get\018\031.oresai.services.GetMemoRequest\026 .oresai.services.GetMemoResponse\018A\n\004List\018\022.google.protobuf.Empty\026!.oresai.services.ListMemoResponse\018B\n\006Update\018\".oresai.services.UpdateMemoRequest\026\020.oresai.objects.Memo\018D\n\006Delete\018\".oresai.services.DeleteMemoRequest\026\022.google.protobuf.EmptyB}\n\019com.oresai.servicesB\tMemoProtoP\001\162\002\003OSX\170\002\015Oresai.Services\202\002\015Oresai\\Services\226\002\027Oresai\\Services\\GPBMetadata\234\002\016Oresai::ServicesJ\173\b\n\006\018\004\000\000)\001\n\b\n\001\012\018\003\000\000\018\n\b\n\001\002\018\003\002\000\024\n\t\n\002\003\000\018\003\004\000%\n\t\n\002\003\001\018\003\005\000#\n\t\n\002\003\002\018\003\006\000\"\n\n\n\002\006\000\018\004\b\000\014\001\n\n\n\003\006\000\001\018\003\b\b\019\n\011\n\004\006\000\002\000\018\003\t\002>\n\012\n\005\006\000\002\000\001\018\003\t\006\012\n\012\n\005\006\000\002\000\002\018\003\t\r\030\n\012\n\005\006\000\002\000\003\018\003\t)<\n\011\n\004\006\000\002\001\018\003\n\0024\n\012\n\005\006\000\002\001\001\018\003\n\006\t\n\012\n\005\006\000\002\001\002\018\003\n\n\024\n\012\n\005\006\000\002\001\003\018\003\n#2\n\011\n\004\006\000\002\002\018\003\011\002=\n\012\n\005\006\000\002\002\001\018\003\011\006\n\n\012\n\005\006\000\002\002\002\018\003\011\011 \n\012\n\005\006\000\002\002\003\018\003\011+;\n\011\n\004\006\000\002\003\018\003\012\002>\n\012\n\005\006\000\002\003\001\018\003\012\006\012\n\012\n\005\006\000\002\003\002\018\003\012\r\030\n\012\n\005\006\000\002\003\003\018\003\012)<\n\011\n\004\006\000\002\004\018\003\r\002@\n\012\n\005\006\000\002\004\001\018\003\r\006\012\n\012\n\005\006\000\002\004\002\018\003\r\r\030\n\012\n\005\006\000\002\004\003\018\003\r)>\n\n\n\002\004\000\018\004\016\000\020\001\n\n\n\003\004\000\001\018\003\016\b\025\n\011\n\004\004\000\002\000\018\003\017\002\020\n\012\n\005\004\000\002\000\005\018\003\017\002\007\n\012\n\005\004\000\002\000\001\018\003\017\b\015\n\012\n\005\004\000\002\000\003\018\003\017\018\019\n\011\n\004\004\000\002\001\018\003\018\002\021\n\012\n\005\004\000\002\001\005\018\003\018\002\b\n\012\n\005\004\000\002\001\001\018\003\018\t\016\n\012\n\005\004\000\002\001\003\018\003\018\019\020\n\011\n\004\004\000\002\002\018\003\019\002'\n\012\n\005\004\000\002\002\004\018\003\019\002\n\n\012\n\005\004\000\002\002\006\018\003\019\011\029\n\012\n\005\004\000\002\002\001\018\003\019\030\"\n\012\n\005\004\000\002\002\003\018\003\019%&\n\n\n\002\004\001\018\004\022\000\024\001\n\n\n\003\004\001\001\018\003\022\b\022\n\011\n\004\004\001\002\000\018\003\023\002\015\n\012\n\005\004\001\002\000\005\018\003\023\002\007\n\012\n\005\004\001\002\000\001\018\003\023\b\n\n\012\n\005\004\001\002\000\003\018\003\023\r\014\n\n\n\002\004\002\018\004\026\000\028\001\n\n\n\003\004\002\001\018\003\026\b\023\n\011\n\004\004\002\002\000\018\003\027\002(\n\012\n\005\004\002\002\000\004\018\003\027\002\n\n\012\n\005\004\002\002\000\006\018\003\027\011\030\n\012\n\005\004\002\002\000\001\018\003\027\031#\n\012\n\005\004\002\002\000\003\018\003\027&'\n\n\n\002\004\003\018\004\030\000 \001\n\n\n\003\004\003\001\018\003\030\b\024\n\011\n\004\004\003\002\000\018\003\031\002)\n\012\n\005\004\003\002\000\004\018\003\031\002\n\n\012\n\005\004\003\002\000\006\018\003\031\011\030\n\012\n\005\004\003\002\000\001\018\003\031\031$\n\012\n\005\004\003\002\000\003\018\003\031'(\n\n\n\002\004\004\018\004\"\000%\001\n\n\n\003\004\004\001\018\003\"\b\025\n\011\n\004\004\004\002\000\018\003#\002\030\n\012\n\005\004\004\002\000\004\018\003#\002\n\n\012\n\005\004\004\002\000\005\018\003#\011\017\n\012\n\005\004\004\002\000\001\018\003#\018\025\n\012\n\005\004\004\002\000\003\018\003#\028\029\n\011\n\004\004\004\002\001\018\003$\002'\n\012\n\005\004\004\002\001\004\018\003$\002\n\n\012\n\005\004\004\002\001\006\018\003$\011\029\n\012\n\005\004\004\002\001\001\018\003$\030\"\n\012\n\005\004\004\002\001\003\018\003$%&\n\n\n\002\004\005\018\004'\000)\001\n\n\n\003\004\005\001\018\003'\b\025\n\011\n\004\004\005\002\000\018\003(\002\015\n\012\n\005\004\005\002\000\005\018\003(\002\007\n\012\n\005\004\005\002\000\001\018\003(\b\n\n\012\n\005\004\005\002\000\003\018\003(\r\014b\006proto3"
+  let package_service_names = [
+    "oresai.services.MemoService";
+  ]
+end
