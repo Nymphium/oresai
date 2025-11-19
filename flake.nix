@@ -115,7 +115,7 @@
               };
               default = pkgs.mkShell {
                 inputsFrom = [ ci ];
-                packages = devPackages;
+                packages = devPackages ++ [ pkgs.grpcurl ];
               };
             };
           in

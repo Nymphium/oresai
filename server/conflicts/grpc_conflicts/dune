@@ -1,0 +1,4 @@
+(library
+ (name grpc_conflicts)
+ (public_name oresai.conflicts.grpc_conflicts)
+ (libraries grpc))

@@ -1,0 +1,4 @@
+(library
+ (name handlers)
+ (public_name oresai.app.handlers)
+ (libraries oresai.domains))

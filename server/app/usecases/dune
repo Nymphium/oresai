@@ -1,0 +1,7 @@
+(library
+ (name usecases)
+ (public_name oresai.app.usecases)
+ (libraries jwto eio oresai.domains oresai.let)
+ (inline_tests)
+ (preprocess
+  (pps ppx_deriving.std ppx_string_interpolation ppx_inline_test ppx_assert)))

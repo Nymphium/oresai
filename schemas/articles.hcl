@@ -5,33 +5,26 @@ table "articles" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "user_id" {
     type = bigint
-    null = false
   }
   column "title" {
     type = varchar(255)
-    null = false
   }
   column "content" {
     type = text
-    null = false
   }
   column "state" {
     type = enum.article_state
-    null = false
   }
   column "created_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   column "updated_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   primary_key {
     columns = [column.id]
@@ -46,11 +39,9 @@ table "articles_tags" {
   schema = schema.public
   column "article_id" {
     type = bigint
-    null = false
   }
   column "tag_id" {
     type = bigint
-    null = false
   }
   primary_key {
     columns = [column.article_id, column.tag_id]

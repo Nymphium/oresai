@@ -1,0 +1,16 @@
+(include_subdirs qualified)
+
+(test
+ (name test)
+ (libraries
+  oresai.domains.testing
+  oresai.let
+  oresai.infra.db.sql
+  oresai.logs_compat
+  eio_main
+  caqti-eio.unix
+  core
+  caqti-driver-postgresql
+  alcotest)
+ (preprocess
+  (pps ppx_rapper)))

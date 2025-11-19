@@ -1,0 +1,4 @@
+(library
+ (name infra)
+ (public_name oresai.infra)
+ (libraries oresai.let oresai.domains oresai.app.usecases))

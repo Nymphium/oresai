@@ -1,0 +1,11 @@
+(library
+ (name sql)
+ (public_name oresai.infra.db.sql)
+ (libraries
+  oresai.let
+  oresai.domains
+  caqti-eio
+  caqti-driver-postgresql
+  ppx_rapper_eio)
+ (preprocess
+  (pps ppx_rapper ppx_deriving.std)))

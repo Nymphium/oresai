@@ -19,6 +19,7 @@ message CreateArticleRequest {
   string title = 2;
   string content = 3;
   repeated oresai.objects.Tag tags = 4;
+  oresai.objects.ArticleState state = 5;
 }
 
 message GetArticleRequest {

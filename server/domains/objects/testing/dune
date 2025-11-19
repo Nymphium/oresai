@@ -1,0 +1,7 @@
+(include_subdirs no)
+
+(library
+ (name testing)
+ (public_name oresai.domains.testing)
+ (modules :standard user article memo tag)
+ (libraries oresai.domains alcotest))

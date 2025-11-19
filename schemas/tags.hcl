@@ -5,15 +5,12 @@ table "tags" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "name" {
     type = varchar(255)
-    null = false
   }
   column "user_id" {
     type = bigint
-    null = false
   }
   primary_key {
     columns = [column.id]

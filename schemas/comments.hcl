@@ -5,28 +5,22 @@ table "comments" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "target_id" {
     type = bigint
-    null = false
   }
   column "target_type" {
     type = enum.comment_target_type
-    null = false
   }
   column "user_id" {
     type = bigint
-    null = false
   }
   column "content" {
     type = text
-    null = false
   }
   column "created_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   primary_key {
     columns = [column.id]

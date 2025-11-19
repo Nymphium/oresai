@@ -23,19 +23,20 @@ module UpdatedAt = Morph.Seal (struct
 
 module State = struct
   type t =
-    | Draft
-    | Published
-    | Archived
+    | Public
+    | Private
   [@@deriving eq, show { with_path = false }]
 
   type bwd = string [@@deriving eq, show { with_path = false }]
 
-  let to_ = show
+  let to_ = function
+    | Public -> "public"
+    | Private -> "private"
+  ;;
 
   let from = function
-    | "draft" -> Ok Draft
-    | "published" -> Ok Published
-    | "archived" -> Ok Archived
+    | "public" -> Ok Public
+    | "private" -> Ok Private
     | _ -> Error (`ConvertError "state")
   ;;
 
@@ -47,7 +48,7 @@ type t =
   { id : Id.t
   ; user_id : UserId.t
   ; content : Content.t
-  ; tag_ids : TagId.t list
+  ; tags : Tag.t list
   ; state : State.t
   ; created_at : CreatedAt.t
   ; updated_at : UpdatedAt.t
@@ -57,7 +58,7 @@ type t =
 let id { id; _ } = Id.to_ id
 let user_id { user_id; _ } = UserId.to_ user_id
 let content { content; _ } = Content.to_ content
-let tags { tag_ids; _ } = List.map TagId.to_ tag_ids
+let tags { tags; _ } = tags
 let state { state; _ } = State.show state
 let created_at { created_at; _ } = CreatedAt.to_ created_at
 let updated_at { updated_at; _ } = UpdatedAt.to_ updated_at

@@ -61,7 +61,7 @@ type t =
   ; email : Email.t
   ; display_name : DisplayName.t
   ; bio : Bio.t
-  ; avatar_url : AvatarUrl.t
+  ; avatar_url : AvatarUrl.t option
   ; links : Links.t
   ; created_at : CreatedAt.t (** unix time *)
   }
@@ -72,6 +72,6 @@ let name { name; _ } = Name.to_ name
 let email { email; _ } = Email.to_ email
 let display_name { display_name; _ } = DisplayName.to_ display_name
 let bio { bio; _ } = Bio.to_ bio
-let avatar_url { avatar_url; _ } = Values.Url.to_ avatar_url
+let avatar_url { avatar_url; _ } = Option.map ~f:Values.Url.to_ avatar_url
 let links { links; _ } = List.map ~f:Values.Url.to_ links
 let created_at { created_at; _ } = CreatedAt.to_ created_at

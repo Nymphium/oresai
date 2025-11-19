@@ -36,7 +36,11 @@ module State = struct
 
   type bwd = string [@@deriving eq, show { with_path = false }]
 
-  let to_ = show
+  let to_ = function
+    | Draft -> "draft"
+    | Published -> "published"
+    | Archived -> "archived"
+  ;;
 
   let from = function
     | "draft" -> Ok Draft
@@ -54,7 +58,7 @@ type t =
   ; user_id : UserId.t
   ; title : Title.t
   ; content : Content.t
-  ; tags : TagId.t list
+  ; tags : Tag.t list
   ; state : State.t
   ; created_at : CreatedAt.t
   ; updated_at : UpdatedAt.t
@@ -65,7 +69,7 @@ let id { id; _ } = Id.to_ id
 let user_id { user_id; _ } = UserId.to_ user_id
 let title { title; _ } = Title.to_ title
 let content { content; _ } = Content.to_ content
-let tags { tags; _ } = List.map TagId.to_ tags
+let tags { tags; _ } = tags
 let state { state; _ } = State.show state
 let created_at { created_at; _ } = CreatedAt.to_ created_at
 let updated_at { updated_at; _ } = UpdatedAt.to_ updated_at

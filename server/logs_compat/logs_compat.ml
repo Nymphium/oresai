@@ -112,10 +112,13 @@ let%expect_test _ =
   Eio_main.run @@ fun env ->
   Eio.Switch.run @@ fun sw ->
   let stdout = Eio.Stdenv.stdout env in
+  let timer = Eio.Stdenv.clock env in
   Logs.set_reporter (reporter ~sw ~env ~stdout);
   Logs.(set_level @@ Some Debug);
   Logs.debug (fun m -> m "hello");
+  Eio.Time.sleep timer 0.1;
   Logs.debug (fun m -> m {|"world"|});
+  Eio.Time.sleep timer 0.1;
   [%expect
     {|
     { "src": "application", "log_level": "DEBUG", "timestamp": "2025-10-04T07:58:27+09:00", "message": "hello" }
@@ -129,6 +132,7 @@ let%expect_test _ =
         |> add (def "tag2" Format.pp_print_int) 42)
     in
     m ~tags "");
+  Eio.Time.sleep timer 0.1;
   [%expect
     {| { "src": "application", "log_level": "DEBUG", "timestamp": "2025-10-04T07:58:27+09:00", "message": "", "tag1": "this is \"tag1\"", "tag2": "42" } |}];
   Logs.debug (fun m ->
@@ -138,6 +142,7 @@ let%expect_test _ =
       b
       c
       |});
+  Eio.Time.sleep timer 0.1;
   [%expect
     {| { "src": "application", "log_level": "DEBUG", "timestamp": "2025-10-04T07:58:27+09:00", "message": "\\n      a\\n      b\\n      c\\n" } |}]
 ;;

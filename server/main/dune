@@ -1,0 +1,15 @@
+(executable
+ (name main)
+ (libraries
+  oresai.domains
+  oresai.let
+  oresai.infra.db.sql
+  oresai.protos
+  oresai.logs_compat
+  oresai.infra.grpc
+  oenv
+  eio_main
+  h2-eio
+  grpc-eio)
+ (preprocess
+  (pps ppx_deriving.std ppx_string_interpolation)))

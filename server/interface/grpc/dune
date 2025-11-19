@@ -1,0 +1,17 @@
+(include_subdirs qualified)
+
+(library
+ (name grpc')
+ (public_name oresai.infra.grpc)
+ (libraries
+  oresai.let
+  oresai.domains
+  oresai.protos
+  oresai.app.usecases
+  oresai.app.handlers
+  oresai.infra.context
+  core
+  h2-eio
+  grpc-eio)
+ (preprocess
+  (pps ppx_deriving.std)))

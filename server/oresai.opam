@@ -35,4 +35,6 @@ pin-depends: [
   ["ppx_rapper.dev" "git+https://github.com/roddyyaga/ppx_rapper#5b0e62def2d5cc6cbe3dedec1ecb289bee350f9a" ]
   ["grpc-eio.dev" "git+https://github.com/dialohq/ocaml-grpc#b629b55fc15964c5e9455058725519d3f7cfc9a7"]
   ["grpc.dev" "git+https://github.com/dialohq/ocaml-grpc#b629b55fc15964c5e9455058725519d3f7cfc9a7"]
+  ["ocaml-protoc-plugin.dev" "git+https://github.com/Nymphium/ocaml-protoc-plugin#32907893d1097c4ee3358c28aa487b936886405e"]
+  ["oenv.dev" "git+https://github.com/Nymphium/oenv#40d13b8bfcb1602a9c2cd91726fe592eed946f21"]
 ]

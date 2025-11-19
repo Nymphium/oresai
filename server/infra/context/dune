@@ -1,0 +1,4 @@
+(library
+ (name context)
+ (public_name oresai.infra.context)
+ (libraries oresai.domains eio))

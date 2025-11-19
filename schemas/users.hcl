@@ -5,36 +5,29 @@ table "users" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "name" {
     type = varchar(255)
-    null = false
   }
   column "email" {
     type = varchar(255)
-    null = false
   }
   column "display_name" {
     type = varchar(255)
-    null = false
   }
   column "bio" {
     type = text
-    null = false
   }
   column "avatar_url" {
     type = varchar(255)
-    null = false
+    null = true
   }
   column "hashed_password" {
     type = text
-    null = false
   }
   column "created_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   primary_key {
     columns = [column.id]
@@ -52,15 +45,12 @@ table "users_links" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "user_id" {
     type = bigint
-    null = false
   }
   column "url" {
     type = varchar(255)
-    null = false
   }
   primary_key {
     columns = [column.id]

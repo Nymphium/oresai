@@ -5,29 +5,23 @@ table "memos" {
     identity {
       generated = "BY_DEFAULT"
     }
-    null = false
   }
   column "user_id" {
     type = bigint
-    null = false
   }
   column "content" {
     type = text
-    null = false
   }
-  column "is_public" {
+  column "state" {
     type = enum.memo_state
-    null = false
   }
   column "created_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   column "updated_at" {
     type    = timestamptz
     default = sql("now()")
-    null    = false
   }
   primary_key {
     columns = [column.id]
@@ -42,11 +36,9 @@ table "memo_tags" {
   schema = schema.public
   column "memo_id" {
     type = bigint
-    null = false
   }
   column "tag_id" {
     type = bigint
-    null = false
   }
   primary_key {
     columns = [column.memo_id, column.tag_id]

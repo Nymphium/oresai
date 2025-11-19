@@ -36,4 +36,4 @@ _opam/
 
 
 .direnv/
-.env.local
+**/.env.local

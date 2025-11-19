@@ -13,12 +13,13 @@ message RegisterRequest {
   string email = 3;
   string display_name = 4;
   string bio = 5;
-  string avatar_url = 6;
+  optional string avatar_url = 6;
   repeated string links = 7;
 }
 
 message RegisterResponse {
   int64 user_id = 1;
+  int64 account_id = 2;
 }
 
 message LoginRequest {
@@ -27,5 +28,5 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string access_token = 1; // JWT token
+  string access_token = 1;
 }

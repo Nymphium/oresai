@@ -30,12 +30,22 @@ let emit_reflection mdls =
   print_endline "  | _ -> None\n"
 ;;
 
+let emit_error_module () =
+  print_endline "module Errors = struct";
+  print_endline "  open Ocaml_protoc_plugin.Result";
+  print_endline "  type t = error";
+  print_endline "  let pp = pp_error";
+  print_endline "end";
+  print_newline ()
+;;
+
 let () =
   let target_dir = "generated" in
   let mdls =
     Sys.readdir target_dir
     |> Array.map (Fun.compose String.capitalize_ascii Filename.chop_extension)
   in
+  emit_error_module ();
   emit_bidings mdls;
   print_newline ();
   emit_reflection mdls
