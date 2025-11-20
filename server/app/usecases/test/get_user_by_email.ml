@@ -39,7 +39,7 @@ let test =
         Alcotest.check'
           (result Testing.User.t Errors'.t)
           ~msg:"equal"
-          ~expected:(Error `Missing_user_id)
+          ~expected:(Error `Missing_email)
           ~actual )
     ] )
 ;;

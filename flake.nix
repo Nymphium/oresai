@@ -131,7 +131,10 @@
             pnpm = pkgs.pnpm.override {
               inherit nodejs;
             };
-            js = [ nodejs pnpm ];
+            js = [
+              nodejs
+              pnpm
+            ];
             devShells = rec {
               ci = pkgs.mkShellNoCC {
                 inputsFrom = [ base.devShells.default ];

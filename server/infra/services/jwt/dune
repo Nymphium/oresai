@@ -1,4 +1,0 @@
-(library
- (name usecases)
- (public_name oresai.infra.services.jwt)
- (libraries jwto))
