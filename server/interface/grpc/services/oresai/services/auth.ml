@@ -28,25 +28,24 @@ open struct
     return @@ Rpc.Response.make ~user_id ()
   ;;
 
-  let login ~env (m : (module Utils.UC)) =
-    let clock = Eio.Stdenv.clock env in
+  let login (m : (module Utils.UC)) =
     let module Rpc = Bwd.Service.Login in
     let module G = Utils.Grpc ((val m)) in
     G.create_unary_handler (module Rpc) @@ fun { email; password } ->
     let open Let.Result in
     let* email = Domains.Objects.User.Email.from email in
     let* user = Usecases.Get_user_by_email.run ~email ~password in
-    let* access_token = Usecases.User_create_auth_token.run ~clock ~user in
+    let* access_token =
+      Usecases.User_create_auth_token.run @@ Domains.Objects.User.id user
+    in
     return @@ Rpc.Response.make ~access_token ()
   ;;
 
-  let service ~env m =
-    Grpc_eio.Server.Service.(v () |> register m |> login ~env m |> handle_request)
+  let service m =
+    Grpc_eio.Server.Service.(v () |> register m |> login m |> handle_request)
   ;;
 end
 
-let register ~env m =
-  Grpc_eio.Server.add_service
-    ~name:Bwd.Service.package_service_name
-    ~service:(service ~env m)
+let register m =
+  Grpc_eio.Server.add_service ~name:Bwd.Service.package_service_name ~service:(service m)
 ;;

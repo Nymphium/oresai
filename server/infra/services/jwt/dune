@@ -1,0 +1,4 @@
+(library
+ (name jwt)
+ (public_name oresai.infra.services.jwt)
+ (libraries oresai.let eio jwto core))

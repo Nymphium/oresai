@@ -1,11 +1,11 @@
 open Core
 
-let main ~env ~sw ~db Config.{ port; _ } () =
+let main ~env ~sw ~db (Config.{ port; _ } as config) () =
   let open Let.Result in
   Logs.info (fun m -> m "Starting gRPC server on port %d" port);
   let* () = Server.chehealth ~env ~db in
   Logs.info (fun m -> m "service is healthy");
-  return @@ Server.serve ~env ~sw ~port ~db
+  return @@ Server.serve ~env ~sw ~db config
 ;;
 
 let shutdown = function

@@ -1,0 +1,5 @@
+(library
+ (name services)
+ (public_name oresai.app.services)
+ (preprocess
+  (pps ppx_deriving.std)))

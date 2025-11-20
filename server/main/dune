@@ -1,9 +1,13 @@
+(include_subdirs qualified)
+
 (executable
  (name main)
  (libraries
   oresai.domains
   oresai.let
+  oresai.app.services
   oresai.infra.db.sql
+  oresai.infra.services.jwt
   oresai.protos
   oresai.logs_compat
   oresai.infra.grpc

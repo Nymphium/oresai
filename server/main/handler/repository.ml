@@ -53,15 +53,12 @@ open struct
     | effect Locator.Inject (Article.ListByUser { user_id }), k ->
       continue k @@ Sql.Articles.list_by_user_id user_id
   ;;
-
-  let handle_uc th () =
-    system @@ fun () ->
-    articles @@ fun () ->
-    memos @@ fun () -> users th
-  ;;
 end
 
 let v ~db th =
   (* let conn = Eio.Fiber.get Sql.Context.conn |> Option.value_exn in *)
-  Sql.Handler.v db @@ handle_uc th
+  Sql.Handler.v db @@ fun () ->
+  system @@ fun () ->
+  articles @@ fun () ->
+  memos @@ fun () -> users @@ th
 ;;

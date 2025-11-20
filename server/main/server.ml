@@ -1,20 +1,19 @@
 open Core
 
-let[@inline] services ~env (m : (module Grpc'.Utils.UC)) =
+let[@inline] services (m : (module Grpc'.Utils.UC)) =
   Grpc_eio.Server.v ()
   |> Grpc'.Services.Grpc.Reflection.V1.Reflection.register m
   |> Grpc'.Services.Grpc.Health.V1.Health.register m
-  |> Grpc'.Services.Oresai.Services.Auth.register ~env m
+  |> Grpc'.Services.Oresai.Services.Auth.register m
   |> Grpc'.Services.Oresai.Services.User.register m
 ;;
 
-let[@inline] icept ~env stream reqd close =
+let[@inline] icept stream reqd close =
   let open Grpc'.Icept in
-  New.(v stream reqd (Request_logger.register +> Auth.register ~env +> close))
+  New.(v stream reqd (Request_logger.register +> Auth.register +> close))
 ;;
 
-let connection_handler ~sw ~env ~db:_ server =
-  let icept = icept ~env in
+let connection_handler ~sw ~db:_ server =
   let error_handler _client_address ?request:_ _error start_response =
     Logs.err (fun m -> m "Error handling request");
     let response_body = start_response H2.Headers.empty in
@@ -46,11 +45,11 @@ let connection_handler ~sw ~env ~db:_ server =
       socket
 ;;
 
-let serve ~env ~sw ~port ~db =
+let serve ~env ~sw ~db Config.{ port; jwt_secret; _ } =
   let net = Eio.Stdenv.net env in
   let addr = `Tcp (Eio.Net.Ipaddr.V4.loopback, port) in
   let module M = struct
-    let run_usecase th = Handler.v ~db th
+    let run_usecase th = Handler.v ~db ~env ~jwt_secret th
 
     let get_user_id () =
       Eio.Fiber.get Context.user_id
@@ -59,7 +58,7 @@ let serve ~env ~sw ~port ~db =
     ;;
   end
   in
-  let handler = connection_handler ~env ~sw ~db (services ~env (module M)) in
+  let handler = connection_handler ~sw ~db (services (module M)) in
   let server_socket = Eio.Net.listen net ~sw ~reuse_addr:true ~backlog:128 addr in
   let rec listen () =
     let () = Eio.Net.accept_fork ~sw server_socket ~on_error:raise_notrace handler in

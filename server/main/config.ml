@@ -20,14 +20,16 @@ let dbdsn_reader =
 type t =
   { db_dsn : Uri.t
   ; port : int
+  ; jwt_secret : string
   }
 
 let read () =
   Oenv.(
     Product.(
-      v (fun db_dsn port -> { db_dsn; port })
+      v (fun db_dsn port jwt_secret -> { db_dsn; port; jwt_secret })
       +: dbdsn_reader
       +: (int "PORT" ~secret:false |> optional |> default 50051)
+      +: string "JWT_SECRET"
       |> close)
     |> read)
 ;;

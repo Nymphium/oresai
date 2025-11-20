@@ -1,7 +1,6 @@
 open Core
 
-let register ~env stream reqd k =
-  let clock = Eio.Stdenv.clock env in
+let register stream reqd k =
   let H2.Request.{ headers; _ } = H2.Reqd.request reqd in
   let auth = H2.Headers.get headers "authorization" in
   match auth with
@@ -10,7 +9,7 @@ let register ~env stream reqd k =
     then (
       (* entire length - |Bearer | *)
       let token = String.sub auth ~pos:7 ~len:(String.length auth - 7) in
-      Usecases.Get_user_id_from_access_token.run ~clock token |> function
+      Usecases.Get_user_id_from_access_token.run token |> function
       | Ok user_id ->
         let user_id = Domains.Objects.User.Id.from user_id in
         Eio.Fiber.with_binding Context.user_id user_id @@ fun () -> k stream reqd
