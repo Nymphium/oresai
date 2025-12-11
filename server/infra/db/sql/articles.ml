@@ -254,7 +254,7 @@ let find_by_id id =
       db
   in
   let* tags = Tags.list db t.id in
-  return @@ { t with tags }
+  return { t with tags }
 ;;
 
 let list_by_user_id user_id =

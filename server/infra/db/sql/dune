@@ -1,3 +1,5 @@
+(include_subdirs qualified)
+
 (library
  (name sql)
  (public_name oresai.infra.db.sql)
